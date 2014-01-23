@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Test</title>    
+        <style>
+            .dither {
+                visibility:hidden;
+            }    
+        </style>
+    </head>
+    <body>
+        <img class="dither" id="target" src="caravaggio.jpg"></img>
+        <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+        <script src="dithering.js"></script>
+        <script>
+            $(function() {
+                console.log('ready');
+                dither = new Dithering('.dither');
+                //dither.turnOn();
+            });
+        </script>
+    </body>
+</html>
