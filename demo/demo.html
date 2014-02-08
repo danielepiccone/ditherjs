@@ -5,13 +5,16 @@
         <style>
             .dither {
                 visibility:hidden;
+                width:100%;
             }    
         </style>
     </head>
     <body>
-        <img class="dither" id="target" src="caravaggio.jpg"></img>
+        <img class="dither" id="target" src="panoramio.jpg" />
+        <img class="dither" id="target" src="caravaggio.jpg" />
+        <img class="dither" id="target" src="cybill.jpg" />
         <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
-        <script src="dithering.js"></script>
+        <script src="../src/dither.js"></script>
         <script>
             $(function() {
                 console.log('ready');
