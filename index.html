@@ -1,0 +1,158 @@
+<!doctype html>
+<html>
+    <head>
+        <title>dither.js - javascript library for image dithering and color quantization</title>
+        <meta name="description" content="A javascript library which transforms an img into a dithered image using a fixed palette.">
+        <meta name="keywords" content="HTML5,JavaScript,canvas,pixel,dither">
+        <meta name="author" content="Daniele Piccone">
+        <link type="text/css" rel="stylesheet" href="font/stylesheet.css">
+        <script src="src/dither.js"></script>
+        <style>
+            body,html {
+                font-family: 'fixedsys_excelsior_301regular';
+                width:100%;
+                height:100%;
+                margin:0;
+                padding:0;
+            }
+
+            div.wrapper {
+                position:absolute;
+                top:0px;
+                left:0px;
+                right:0px;
+                bottom:0px;
+                overflow:hidden;
+                padding:5em;
+            }
+
+            div.wrapper > .background {
+                min-width:100%;
+                min-height:100%;
+                position:absolute;
+                top:0px;
+                left:0px;
+                display:block;
+                z-index:1;
+                background:#fff;
+            }
+
+            div.headline {
+                position:relative;
+                width: 37.5em;
+                top:0;
+                left:0;
+                z-index:9;
+                background:#fff;
+                color:#000;
+            }
+
+            div.headline > .jumbotron {
+                font-size:4em;
+            }
+
+            div.headline > .jumbotron > * {
+                margin:0;
+            }
+            
+            .dither {
+                visibility: hidden;
+            }
+
+            div.headline > .download {
+                float:left;
+                width:25%;
+            }
+           
+            div.headline .text  {
+                float:left;
+                width:75%;
+                font-family: sans-serif;
+            }
+
+            a:hover {
+                border-bottom: 5px solid black;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class="headline">
+                <div class="jumbotron">
+                    <h1>dither.js</h1>
+                    <p>Each dot matters.</p>
+                </div>
+                <div class="download">
+                    <a href="https://github.com/dpiccone/ditherjs">
+                        <img src="img/github.png" alt="download source">
+                    </a>
+                </div>
+                <div class="text">
+                    <p>
+                    A javascript library which transforms an &lt;img&gt; element <br/>
+                    into a dithered image using a fixed palette.
+                    </p>
+                    <p>Informations and code hosted on github.</p>
+                </div>
+                <p>&nbsp;</p>
+            </div>
+            <img class="background dither" src="img/atlanta_skyline_at_sunset_georgia_wallpaper-1600x1200.jpg" alt="panorama" />
+        </div>
+
+        <script>
+            console.log('panda');
+
+            var palette1 = [
+            [0,0,0],
+            [85,255,85],
+            [255,85,85],
+            [255,255,85]
+            ];
+
+            var palette2 = [
+            [0,0,0],
+            [85,255,255],
+            [255,85,85],
+            [255,255,255]
+            ];
+
+            var palette3 = [
+            [0,0,0],
+            [255,0,255],
+            [0,255,255],
+            [255,255,255]
+            ];
+
+            var coin = Math.random();
+            var palette = coin < 0.3 ? palette1 : coin < 0.6 ? palette2 : palette3;
+            var options = {
+                "step": 2,
+                "className": "dither",
+                "palette": palette
+            };
+
+            dither = new Dithering('.dither',options);
+        </script>
+
+        <!-- Start of StatCounter Code for Default Guide -->
+        <script type="text/javascript">
+            var sc_project=9596955; 
+            var sc_invisible=1; 
+            var sc_security="7c517e86"; 
+            var scJsHost = (("https:" == document.location.protocol) ?
+            "https://secure." : "http://www.");
+            document.write("<sc"+"ript type='text/javascript' src='" +
+                scJsHost+
+            "statcounter.com/counter/counter.js'></"+"script>");
+        </script>
+        <noscript><div class="statcounter"><a title="web counter"
+                    href="http://statcounter.com/free-hit-counter/"
+                    target="_blank"><img class="statcounter"
+                    src="http://c.statcounter.com/9596955/0/7c517e86/1/"
+                    alt="web counter"></a></div></noscript>
+        <!-- End of StatCounter Code for Default Guide -->
+
+    </body>
+</html>
+
