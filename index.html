@@ -69,9 +69,13 @@
                 width:75%;
                 font-family: "Helvetica","Arial",sans-serif;
             }
-
+            
+            a {
+                text-decoration:none;
+                color:inherit;
+            }
             a:hover {
-                border-bottom: 5px solid black;
+                border-bottom: 2px solid black;
             }
 
         </style>
@@ -83,19 +87,15 @@
                     <h1>dither.js</h1>
                     <p>Each dot matters.</p>
                 </div>
-                <div class="download">
-                    <a href="https://github.com/dpiccone/ditherjs">
-                        <img src="img/github.png" alt="download source">
-                    </a>
-                </div>
                 <div class="text">
                     <p>
                     A javascript library which transforms an &lt;img&gt; element <br/>
                     into a dithered image using a fixed palette.
                     </p>
-                    <p>Informations and code hosted on github.</p>
+                    <p><a href="https://github.com/dpiccone/ditherjs" ><strong>Informations and code hosted on github.
+                            Grab it.</strong></a></p>
                 </div>
-                <p>&nbsp;</p>
+                <div style="clear:both">&nbsp;</div>
             </div>
             <img class="background dither" src="img/atlanta_skyline_at_sunset_georgia_wallpaper-1600x1200.jpg" alt="panorama" />
         </div>
@@ -127,9 +127,10 @@
             var coin = Math.random();
             var palette = coin < 0.3 ? palette1 : coin < 0.6 ? palette2 : palette3;
             var options = {
-                "step": 2,
+                "step": 3,
                 "className": "dither",
-                "palette": palette
+                "palette": palette,
+                "algorithm": "errorDiffusion"
             };
 
             dither = new Dithering('.dither',options);
