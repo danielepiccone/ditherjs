@@ -12,7 +12,6 @@
 * @param selector - the selector of the elements to process
 * @param opt - the options object
 */
-
 var Dithering = function Dithering(selector,opt) {
     var self = this;
 
