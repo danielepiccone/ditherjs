@@ -11,7 +11,11 @@ HTML:
 
 JS:
 ```
-new Dithering('.dither'[,options]);
+new DitherJS('.dither'[,options]);
+```
+or as a jQuery plugin
+```
+$('.dither').ditherJS(options);
 ```
 
 options are defined as:
@@ -23,6 +27,9 @@ var options = {
     "algorithm": "ordered" // can be "ordered" or "errorDiffusion"
 };
 ```
+### Changelog
+
+- jquery plugin wrapper
 
 author 2014 [Daniele Piccone](http://www.danielepiccone.com)
 
