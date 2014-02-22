@@ -30,9 +30,7 @@ var options = {
 
 ### Testimonials
 
-Useful as a comb to a bald man.
-
--Anon
+Useful as a comb to a bald man. -Anon
 
 ### Changelog
 
