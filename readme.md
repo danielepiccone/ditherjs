@@ -1,4 +1,4 @@
-#dither.js
+#ditherJS
 
 A javascript library which transforms an <img> element 
 into a dithered image using a fixed palette.
@@ -27,6 +27,13 @@ var options = {
     "algorithm": "ordered" // can be "ordered" or "errorDiffusion"
 };
 ```
+
+### Testimonials
+
+Useful as a comb to a bald man.
+
+- Anon
+
 ### Changelog
 
 - jquery plugin wrapper
