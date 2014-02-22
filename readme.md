@@ -32,7 +32,7 @@ var options = {
 
 Useful as a comb to a bald man.
 
-- Anon
+-Anon
 
 ### Changelog
 
