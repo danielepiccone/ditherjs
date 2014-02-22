@@ -13,7 +13,7 @@
 * @param opt - the options object
 */
 
-var Dithering = function Dithering(selector,opt) {
+var DitherJS = function DitherJS(selector,opt) {
     var self = this;
 
     // Default
@@ -316,4 +316,14 @@ var Dithering = function Dithering(selector,opt) {
 
 };
 
+/**
+ * Register AMD module
+ * */
+if (typeof define === 'function' && define.amd) {
+    define('ditherjs', function(){
+        // This function is expected to instantiate the module
+        // in this case returns the constructor
+        return DitherJS;
+    });
+};
 

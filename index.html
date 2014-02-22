@@ -6,7 +6,7 @@
         <meta name="keywords" content="HTML5,JavaScript,canvas,pixel,dither">
         <meta name="author" content="Daniele Piccone">
         <link type="text/css" rel="stylesheet" href="font/stylesheet.css">
-        <script src="src/dither.js"></script>
+        <script src="src/ditherjs.js"></script>
         <style>
             body,html {
                 font-family: 'fixedsys_excelsior_301regular';
@@ -14,6 +14,7 @@
                 height:100%;
                 margin:0;
                 padding:0;
+                font-size:16px;
             }
 
             div.wrapper {
@@ -43,8 +44,8 @@
                 top:0;
                 left:0;
                 z-index:9;
-                background:#fff;
-                color:#000;
+                color:#fff;
+                text-shadow: 1px 1px #000,2px 2px #000,3px 3px #000, 4px 4px #000;
             }
 
             div.headline > .jumbotron {
@@ -67,7 +68,7 @@
             div.headline .text  {
                 float:left;
                 width:75%;
-                font-family: "Helvetica","Arial",sans-serif;
+                font-size:32px;
             }
             
             a {
@@ -75,7 +76,8 @@
                 color:inherit;
             }
             a:hover {
-                border-bottom: 2px solid black;
+                text-shadow: 1px 1px #000;
+
             }
 
         </style>
@@ -89,8 +91,7 @@
                 </div>
                 <div class="text">
                     <p>
-                    A javascript library which transforms an &lt;img&gt; element <br/>
-                    into a dithered image using a fixed palette.
+                    Dither images using a fixed palette.
                     </p>
                     <p><a href="https://github.com/dpiccone/ditherjs" ><strong>Informations and code hosted on github.
                             Grab it.</strong></a></p>
@@ -101,7 +102,7 @@
         </div>
 
         <script>
-            console.log('panda');
+            console.log('panda.');
 
             var palette1 = [
             [0,0,0],
@@ -130,10 +131,10 @@
                 "step": 3,
                 "className": "dither",
                 "palette": palette,
-                "algorithm": "errorDiffusion"
+                "algorithm": "ordered"
             };
 
-            dither = new Dithering('.dither',options);
+            dither = new DitherJS('.dither',options);
         </script>
 
         <!-- Start of StatCounter Code for Default Guide -->
