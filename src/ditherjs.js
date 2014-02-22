@@ -49,8 +49,6 @@ var DitherJS = function DitherJS(selector,opt) {
     this._dither = function(el) {
         var ditherCtx = this;
 
-        //el.crossOrigin = 'http://profile.ak.fbcdn.net/crossdomain.xml';
-
         // Take image size
         var h = el.clientHeight;
         var w = el.clientWidth;
@@ -307,18 +305,23 @@ var DitherJS = function DitherJS(selector,opt) {
     /**
     * Main
     * */
-    var elements = document.querySelectorAll(selector);
+    try {
+        var elements = document.querySelectorAll(selector);
 
-    //  deal with multiple
-    for (var i=0;i<elements.length;i++) {
-        this._refreshDither(elements[i]);
+        //  deal with multiple
+        for (var i=0;i<elements.length;i++) {
+            this._refreshDither(elements[i]);
+        } 
+
+    } catch (e) {
+        // Officially not in the browser
     }
 
 };
 
 /**
- * Register AMD module
- * */
+* Register AMD module
+* */
 if (typeof define === 'function' && define.amd) {
     define('ditherjs', function(){
         // This function is expected to instantiate the module
@@ -326,4 +329,11 @@ if (typeof define === 'function' && define.amd) {
         return DitherJS;
     });
 };
+
+/**
+* Export class for node 
+* */
+if (typeof module === "object" && module.exports) {
+    module.exports = DitherJS;
+}
 
