@@ -1,0 +1,33 @@
+{
+    "name": "ditherjs",
+    "title": "DitherJS",
+    "description": "jQuery plugin for javascript image dithering using a fixed palette",
+    "keywords": [
+        "palette",
+        "color",
+        "dithering",
+        "pixel"
+    ],
+    "version": "0.1.0",
+    "author": {
+        "name": "Daniele Piccone"
+    },
+    "maintainers": [
+        {
+            "name": "Daniele Piccone",
+            "url": "http://www.danielepiccone.com"
+        }
+    ],
+    "licenses": [
+        {
+            "type": "GPL",
+            "url": "https://github.com/dpiccone/ditherjs/blob/10436db8b5b72708b32c41e6d12fa437ca11c2f3/gpl-3.0.txt"
+        }
+    ],
+    "bugs": "https://github.com/dpiccone/ditherjs/issues",
+    "homepage": "https://dpiccone.github.io/ditherjs",
+    "docs": "https://github.com/dpiccone/ditherjs",
+    "dependencies": {
+        "jquery": ">=1.8"
+    }
+}
