@@ -10,16 +10,17 @@
         </style>
     </head>
     <body>
-        <img class="dither" id="target" src="panoramio.jpg" />
-        <img class="dither" id="target" src="caravaggio.jpg" />
-        <img class="dither" id="target" src="cybill.jpg" />
+        <img class="dither" id="target" src="Lamborghini-Countach-7.gif" />
         <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
-        <script src="../src/dither.js"></script>
+        <script src="../src/ditherjs.js"></script>
+        <script src="../src/jquery.ditherjs.js"></script>
         <script>
             $(function() {
                 console.log('ready');
-                dither = new Dithering('.dither');
-                //dither.turnOn();
+                var options = {
+                    "step":3
+                };
+                $('.dither').ditherJS(options);
             });
         </script>
     </body>
