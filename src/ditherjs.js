@@ -198,6 +198,84 @@ var DitherJS = function DitherJS(selector,opt) {
         };
 
         /**
+        * Perform an atkinson dither on the image
+        * */
+        this.atkinsonDither = function(in_imgdata) {
+            // Create a new empty image
+            var out_imgdata = ctx.createImageData(in_imgdata);
+            var d = new Uint8ClampedArray(in_imgdata.data);
+            var out = new Uint8ClampedArray(in_imgdata.data);
+            // Step
+            var step = self.opt.step;
+            // Ratio >=1
+            var ratio = 1/8;
+
+            for (var y=0;y<h;y += step) {
+                for (var x=0;x<w;x += step) {
+                    var i = (4*x) + (4*y*w);
+                    
+                    var $i = function(x,y) {
+                        return (4*x) + (4*y*w);
+                    };
+
+                    // Define bytes
+                    var r = i;
+                    var g = i+1;
+                    var b = i+2;
+                    var a = i+3;
+
+                    var color = new Array(d[r],d[g],d[b]); 
+                    var approx = ditherCtx.approximateColor(color);
+                    
+                    var q = [];
+                    q[r] = d[r] - approx[0];
+                    q[g] = d[g] - approx[1];
+                    q[b] = d[b] - approx[2];
+                                     
+                    // Diffuse the error for three colors
+                    d[$i(x+step,y) + 0] += ratio * q[r];
+                    d[$i(x-step,y+step) + 0] += ratio * q[r];
+                    d[$i(x,y+step) + 0] += ratio * q[r];
+                    d[$i(x+step,y+step) + 0] += ratio * q[r];
+                    d[$i(x+(2*step),y) + 0] += ratio * q[r];
+                    d[$i(x,y+(2*step)) + 0] += ratio * q[r];
+
+                    d[$i(x+step,y) + 1] += ratio * q[r];
+                    d[$i(x-step,y+step) + 1] += ratio * q[r];
+                    d[$i(x,y+step) + 1] += ratio * q[r];
+                    d[$i(x+step,y+step) + 1] += ratio * q[r];
+                    d[$i(x+(2*step),y) + 1] += ratio * q[r];
+                    d[$i(x,y+(2*step)) + 1] += ratio * q[r];
+                    
+                    d[$i(x+step,y) + 2] += ratio * q[r];
+                    d[$i(x-step,y+step) + 2] += ratio * q[r];
+                    d[$i(x,y+step) + 2] += ratio * q[r];
+                    d[$i(x+step,y+step) + 2] += ratio * q[r];
+                    d[$i(x+(2*step),y) + 2] += ratio * q[r];
+                    d[$i(x,y+(2*step)) + 2] += ratio * q[r];
+                    
+                    var tr = approx[0];
+                    var tg = approx[1];
+                    var tb = approx[2];
+
+                    // Draw a block
+                    for (var dx=0;dx<step;dx++){
+                        for (var dy=0;dy<step;dy++){
+                            var di = i + (4 * dx) + (4 * w * dy);
+
+                            // Draw pixel
+                            out[di] = tr;
+                            out[di+1] = tg;
+                            out[di+2] = tb;
+
+                        }
+                    }
+                }
+            }
+            out_imgdata.data.set(out);
+            return out_imgdata;
+        };
+        /**
         * Perform an error diffusion dither on the image
         * */
         this.errorDiffusionDither = function(in_imgdata) {
@@ -291,6 +369,8 @@ var DitherJS = function DitherJS(selector,opt) {
             var out_image = ditherCtx.errorDiffusionDither(in_image);
         else if (self.opt.algorithm == 'ordered')
             var out_image = ditherCtx.orderedDither(in_image);
+        else if (self.opt.algorithm == 'atkinson')
+            var out_image = ditherCtx.atkinsonDither(in_image);
         else
             throw new Error('Not a valid algorithm');
 

@@ -10,7 +10,7 @@
         </style>
     </head>
     <body>
-        <img class="dither" id="target" src="Lamborghini-Countach-7.gif" />
+        <img class="dither" id="target" src="parrot-zoo.jpg" />
         <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
         <script src="../src/ditherjs.js"></script>
         <script src="../src/jquery.ditherjs.js"></script>
@@ -18,7 +18,8 @@
             $(function() {
                 console.log('ready');
                 var options = {
-                    "step":3
+                    "step":3,
+                    "algorithm": "atkinson"
                 };
                 $('.dither').ditherJS(options);
             });
