@@ -28,6 +28,10 @@ var options = {
 };
 ```
 
+the monochrome branch supports also
+```"monochrome": true```
+
+
 ### Testimonials
 
 Useful as a comb to a bald man. -Anon
