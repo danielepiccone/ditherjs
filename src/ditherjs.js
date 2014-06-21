@@ -27,6 +27,7 @@ var DitherJS = function DitherJS(selector,opt) {
         [0,255,255],
         [255,255,255]
     ];
+    self.opt.monochrome = self.opt.monochrome || false;
 
     this.palette = self.opt.palette;
 
@@ -75,7 +76,7 @@ var DitherJS = function DitherJS(selector,opt) {
         * @return i - the index of the coloser color
         * */
         this.approximateColor = function(color) {
-            var palette = self.opt.palette;
+            var palette = self.opt.monochrome ? [[0,0,0],[255,255,255]] : self.opt.palette;
             var findIndex = function(fun,arg,list,min) {
                 if (list.length == 2) {
                     if (fun(arg,min) <= fun(arg,list[1])) {
@@ -356,6 +357,20 @@ var DitherJS = function DitherJS(selector,opt) {
             return out_imgdata;
         };
 
+        this.recolorImage = function(imgData) {
+            var b = self.opt.palette[0];
+            var w = self.opt.palette[1];
+            console.log('recoloring'); 
+            for (var i=0;i<imgData.data.length;i+=4) {
+                imgData.data[i]= imgData.data[i] < 127 ? b[0] : w[0];
+                imgData.data[i+1]= imgData.data[i+1] < 127 ? b[1] : w[1];
+                imgData.data[i+2]= imgData.data[i+2] < 127 ? b[2] : w[2];
+            }
+            //console.log(image);
+            // http://stackoverflow.com/questions/14175156/change-color-of-an-image-drawn-on-an-html5-canvas-element
+            return imgData
+        };
+
         var ctx = this.getContext(el);
 
         // Put the picture in
@@ -373,6 +388,10 @@ var DitherJS = function DitherJS(selector,opt) {
             var out_image = ditherCtx.atkinsonDither(in_image);
         else
             throw new Error('Not a valid algorithm');
+
+        // if monochrome recolor
+        if (self.opt.monochrome)
+            var out_image = ditherCtx.recolorImage(out_image);
 
         // Put image data
         ctx.putImageData(out_image,0,0);

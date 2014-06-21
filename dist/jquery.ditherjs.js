@@ -27,6 +27,7 @@ var DitherJS = function DitherJS(selector,opt) {
         [0,255,255],
         [255,255,255]
     ];
+    self.opt.monochrome = self.opt.monochrome || false;
 
     this.palette = self.opt.palette;
 
@@ -48,8 +49,6 @@ var DitherJS = function DitherJS(selector,opt) {
     * */
     this._dither = function(el) {
         var ditherCtx = this;
-
-        //el.crossOrigin = 'http://profile.ak.fbcdn.net/crossdomain.xml';
 
         // Take image size
         var h = el.clientHeight;
@@ -77,7 +76,7 @@ var DitherJS = function DitherJS(selector,opt) {
         * @return i - the index of the coloser color
         * */
         this.approximateColor = function(color) {
-            var palette = self.opt.palette;
+            var palette = self.opt.monochrome ? [[0,0,0],[255,255,255]] : self.opt.palette;
             var findIndex = function(fun,arg,list,min) {
                 if (list.length == 2) {
                     if (fun(arg,min) <= fun(arg,list[1])) {
@@ -200,6 +199,84 @@ var DitherJS = function DitherJS(selector,opt) {
         };
 
         /**
+        * Perform an atkinson dither on the image
+        * */
+        this.atkinsonDither = function(in_imgdata) {
+            // Create a new empty image
+            var out_imgdata = ctx.createImageData(in_imgdata);
+            var d = new Uint8ClampedArray(in_imgdata.data);
+            var out = new Uint8ClampedArray(in_imgdata.data);
+            // Step
+            var step = self.opt.step;
+            // Ratio >=1
+            var ratio = 1/8;
+
+            for (var y=0;y<h;y += step) {
+                for (var x=0;x<w;x += step) {
+                    var i = (4*x) + (4*y*w);
+                    
+                    var $i = function(x,y) {
+                        return (4*x) + (4*y*w);
+                    };
+
+                    // Define bytes
+                    var r = i;
+                    var g = i+1;
+                    var b = i+2;
+                    var a = i+3;
+
+                    var color = new Array(d[r],d[g],d[b]); 
+                    var approx = ditherCtx.approximateColor(color);
+                    
+                    var q = [];
+                    q[r] = d[r] - approx[0];
+                    q[g] = d[g] - approx[1];
+                    q[b] = d[b] - approx[2];
+                                     
+                    // Diffuse the error for three colors
+                    d[$i(x+step,y) + 0] += ratio * q[r];
+                    d[$i(x-step,y+step) + 0] += ratio * q[r];
+                    d[$i(x,y+step) + 0] += ratio * q[r];
+                    d[$i(x+step,y+step) + 0] += ratio * q[r];
+                    d[$i(x+(2*step),y) + 0] += ratio * q[r];
+                    d[$i(x,y+(2*step)) + 0] += ratio * q[r];
+
+                    d[$i(x+step,y) + 1] += ratio * q[r];
+                    d[$i(x-step,y+step) + 1] += ratio * q[r];
+                    d[$i(x,y+step) + 1] += ratio * q[r];
+                    d[$i(x+step,y+step) + 1] += ratio * q[r];
+                    d[$i(x+(2*step),y) + 1] += ratio * q[r];
+                    d[$i(x,y+(2*step)) + 1] += ratio * q[r];
+                    
+                    d[$i(x+step,y) + 2] += ratio * q[r];
+                    d[$i(x-step,y+step) + 2] += ratio * q[r];
+                    d[$i(x,y+step) + 2] += ratio * q[r];
+                    d[$i(x+step,y+step) + 2] += ratio * q[r];
+                    d[$i(x+(2*step),y) + 2] += ratio * q[r];
+                    d[$i(x,y+(2*step)) + 2] += ratio * q[r];
+                    
+                    var tr = approx[0];
+                    var tg = approx[1];
+                    var tb = approx[2];
+
+                    // Draw a block
+                    for (var dx=0;dx<step;dx++){
+                        for (var dy=0;dy<step;dy++){
+                            var di = i + (4 * dx) + (4 * w * dy);
+
+                            // Draw pixel
+                            out[di] = tr;
+                            out[di+1] = tg;
+                            out[di+2] = tb;
+
+                        }
+                    }
+                }
+            }
+            out_imgdata.data.set(out);
+            return out_imgdata;
+        };
+        /**
         * Perform an error diffusion dither on the image
         * */
         this.errorDiffusionDither = function(in_imgdata) {
@@ -280,6 +357,20 @@ var DitherJS = function DitherJS(selector,opt) {
             return out_imgdata;
         };
 
+        this.recolorImage = function(imgData) {
+            var b = self.opt.palette[0];
+            var w = self.opt.palette[1];
+            console.log('recoloring'); 
+            for (var i=0;i<imgData.data.length;i+=4) {
+                imgData.data[i]= imgData.data[i] < 127 ? b[0] : w[0];
+                imgData.data[i+1]= imgData.data[i+1] < 127 ? b[1] : w[1];
+                imgData.data[i+2]= imgData.data[i+2] < 127 ? b[2] : w[2];
+            }
+            //console.log(image);
+            // http://stackoverflow.com/questions/14175156/change-color-of-an-image-drawn-on-an-html5-canvas-element
+            return imgData
+        };
+
         var ctx = this.getContext(el);
 
         // Put the picture in
@@ -293,8 +384,14 @@ var DitherJS = function DitherJS(selector,opt) {
             var out_image = ditherCtx.errorDiffusionDither(in_image);
         else if (self.opt.algorithm == 'ordered')
             var out_image = ditherCtx.orderedDither(in_image);
+        else if (self.opt.algorithm == 'atkinson')
+            var out_image = ditherCtx.atkinsonDither(in_image);
         else
             throw new Error('Not a valid algorithm');
+
+        // if monochrome recolor
+        if (self.opt.monochrome)
+            var out_image = ditherCtx.recolorImage(out_image);
 
         // Put image data
         ctx.putImageData(out_image,0,0);
@@ -307,18 +404,23 @@ var DitherJS = function DitherJS(selector,opt) {
     /**
     * Main
     * */
-    var elements = document.querySelectorAll(selector);
+    try {
+        var elements = document.querySelectorAll(selector);
 
-    //  deal with multiple
-    for (var i=0;i<elements.length;i++) {
-        this._refreshDither(elements[i]);
+        //  deal with multiple
+        for (var i=0;i<elements.length;i++) {
+            this._refreshDither(elements[i]);
+        } 
+
+    } catch (e) {
+        // Officially not in the browser
     }
 
 };
 
 /**
- * Register AMD module
- * */
+* Register AMD module
+* */
 if (typeof define === 'function' && define.amd) {
     define('ditherjs', function(){
         // This function is expected to instantiate the module
@@ -326,6 +428,14 @@ if (typeof define === 'function' && define.amd) {
         return DitherJS;
     });
 };
+
+/**
+* Export class for node 
+* */
+if (typeof module === "object" && module.exports) {
+    module.exports = DitherJS;
+}
+
 ;/**
 * jQuery plugin definition
 * */

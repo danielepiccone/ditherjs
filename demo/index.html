@@ -19,7 +19,18 @@
                 console.log('ready');
                 var options = {
                     "step":3,
-                    "algorithm": "atkinson"
+                    "algorithm": "atkinson",
+                    "monochrome": true,
+                    "palette": [
+                        [0,0,0],
+                        [170,187,153]
+                    ]
+                    /*
+                    "palette": [
+                        [155,155,155],
+                        [244,155,155]
+                        ]
+                        */
                 };
                 $('.dither').ditherJS(options);
             });
