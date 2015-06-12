@@ -341,7 +341,7 @@ var DitherJS = function DitherJS(selector,opt) {
         // Take image size
         var width = input_element.clientWidth || input_element.width;
         var height = input_element.clientHeight || input_element.height;
-        var ctx;
+        var input_ctx;
 
         /**
         * Given an image element substitute it with a canvas
@@ -371,23 +371,23 @@ var DitherJS = function DitherJS(selector,opt) {
         }
         
         if (input_element.nodeName == "CANVAS") {
-            ctx = input_element.getContext('2d');
+            input_ctx = input_element.getContext('2d');
         }
         else {
-            ctx = this.replaceElementWithCanvasAndGetContext(input_element);
+            input_ctx = this.replaceElementWithCanvasAndGetContext(input_element);
             // Put the picture in
-            ctx.drawImage(input_element,0,0,width,height);
+            input_ctx.drawImage(input_element,0,0,width,height);
         }
-        ctx.imageSmoothingEnabled = false;
+        input_ctx.imageSmoothingEnabled = false;
         
 
         // Pick image data
-        var in_image = ctx.getImageData(0,0,width,height);
-        var out_image = dither_algorithum(in_image,width,height,palette);
+        var input_image = input_ctx.getImageData(0,0,width,height);
+        var output_image = dither_algorithum(input_image,width,height,palette);
         // Put image data
 
         
-        var output_ctx = ctx;
+        var output_ctx = input_ctx;
         if (output_element) {
             if (output_element.getContext) {
                 output_ctx = output_element.getContext();
@@ -396,7 +396,7 @@ var DitherJS = function DitherJS(selector,opt) {
                 output_ctx = output_element;
             }
         }
-        output_ctx.putImageData(out_image,0,0);
+        output_ctx.putImageData(output_image,0,0);
         
 
         // Turn it on
