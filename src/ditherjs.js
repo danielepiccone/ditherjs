@@ -331,20 +331,17 @@ var DitherJS = function DitherJS(selector,opt) {
     * */
     this._dither = function(el,algorithum_name,palette) {
         var ditherCtx = this;
-        if (!palette) {
-            palette = self.opt.palette;
-        }
-        if (!algorithum_name) {
-            algorithum_name = self.opt.algorithm;
-        }
+        palette = palette || self.opt.palette;
+        algorithum_name = algorithum_name || self.opt.algorithm;
         var dither_algorithum = algorithums[algorithum_name]
         if (!dither_algorithum){
             throw new Error('Not a valid algorithm', algorithum_name, Object.keys(algorithums));
         }
 
         // Take image size
-        var h = el.clientHeight;
-        var w = el.clientWidth;
+        var width = el.clientWidth || el.width;
+        var height = el.clientHeight || el.height;
+        var ctx;
 
         /**
         * Given an image element substitute it with a canvas
@@ -369,17 +366,24 @@ var DitherJS = function DitherJS(selector,opt) {
 
             // Get the context
             var ctx = canvas.getContext('2d');
-            ctx.imageSmoothingEnabled = false;
+            //ctx.imageSmoothingEnabled = false;
             return ctx;    
         }
+        
+        if (el.nodeName == "CANVAS") {
+            ctx = el.getContext('2d');
+        }
+        else {
+            ctx = this.replaceElementWithCanvasAndGetContext(el);
+            // Put the picture in
+            ctx.drawImage(el,0,0,width,height);
+        }
+        ctx.imageSmoothingEnabled = false;
+        
 
-        var ctx = this.replaceElementWithCanvasAndGetContext(el);
-
-        // Put the picture in
-        ctx.drawImage(el,0,0,w,h);
         // Pick image data
-        var in_image = ctx.getImageData(0,0,w,h);
-        var out_image = dither_algorithum(in_image,w,h,palette);
+        var in_image = ctx.getImageData(0,0,width,height);
+        var out_image = dither_algorithum(in_image,width,height,palette);
         // Put image data
         ctx.putImageData(out_image,0,0);
 
