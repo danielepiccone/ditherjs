@@ -75,12 +75,11 @@ var DitherJS = function DitherJS(selector,opt) {
         
         return {
             // OrderedDither -------------------------------------------------------
-            ordered: function(in_imgdata,w,h,palette) {
+            ordered: function(in_imgdata,w,h,palette, step) {
+                console.log("ordered");
                 // Create a new empty image
                 var out_imgdata = ctx.createImageData(w,h);
                 var d = new Uint8ClampedArray(in_imgdata.data);
-                // Step
-                var step = self.opt.step;
                 // Ratio >=1
                 var ratio = 3;
                 // Threshold Matrix
@@ -137,13 +136,12 @@ var DitherJS = function DitherJS(selector,opt) {
             },
     
             // Atkinson ------------------------------------------------------------
-            atkinson: function(in_imgdata,w,h,palette) {
+            atkinson: function(in_imgdata,w,h,palette,step) {
+                console.log("atkinson");
                 // Create a new empty image
                 var out_imgdata = ctx.createImageData(w,h);
                 var d = new Uint8ClampedArray(in_imgdata.data);
                 var out = new Uint8ClampedArray(in_imgdata.data);
-                // Step
-                var step = self.opt.step;
                 // Ratio >=1
                 var ratio = 1/8;
     
@@ -213,13 +211,12 @@ var DitherJS = function DitherJS(selector,opt) {
             },
     
             // Error Diffusion -----------------------------------------------------
-            errorDiffusion: function(in_imgdata,w,h,palette) {
+            errorDiffusion: function(in_imgdata,w,h,palette,step) {
+                console.log("errorDiffusion");
                 // Create a new empty image
                 var out_imgdata = ctx.createImageData(w,h);
                 var d = new Uint8ClampedArray(in_imgdata.data);
                 var out = new Uint8ClampedArray(in_imgdata.data);
-                // Step
-                var step = self.opt.step;
                 // Ratio >=1
                 var ratio = 1/16;
                 // Threshold Matrix
@@ -329,19 +326,19 @@ var DitherJS = function DitherJS(selector,opt) {
     /**
     * This does all the dirty things
     * */
-    this._dither = function(input_element,algorithum_name,palette,output_element) {
+    this._dither = function(input,algorithum_name,palette,step,output) {
         var ditherCtx = this;
         palette = palette || self.opt.palette;
+        step = step || self.opt.step
         algorithum_name = algorithum_name || self.opt.algorithm;
         var dither_algorithum = algorithums[algorithum_name]
         if (!dither_algorithum){
             throw new Error('Not a valid algorithm', algorithum_name, Object.keys(algorithums));
         }
 
-        // Take image size
-        var width = input_element.clientWidth || input_element.width;
-        var height = input_element.clientHeight || input_element.height;
-        var input_ctx;
+        // Aquire image dimensions (regardless of input type)
+        var width = input.clientWidth || input.width || input.canvas.width;
+        var height = input.clientHeight || input.height || input.canvas.height;
 
         /**
         * Given an image element substitute it with a canvas
@@ -364,41 +361,41 @@ var DitherJS = function DitherJS(selector,opt) {
             // Turn it off
             // canvas.style.visibility = "hidden";
 
-            // Get the context
-            var ctx = canvas.getContext('2d');
-            //ctx.imageSmoothingEnabled = false;
-            return ctx;    
+            return canvas.getContext('2d');
         }
-        
-        if (input_element.nodeName == "CANVAS") {
-            input_ctx = input_element.getContext('2d');
-        }
-        else {
-            input_ctx = this.replaceElementWithCanvasAndGetContext(input_element);
-            // Put the picture in
-            input_ctx.drawImage(input_element,0,0,width,height);
-        }
-        input_ctx.imageSmoothingEnabled = false;
-        
 
-        // Pick image data
-        var input_image = input_ctx.getImageData(0,0,width,height);
-        var output_image = dither_algorithum(input_image,width,height,palette);
-        // Put image data
-
-        
-        var output_ctx = input_ctx;
-        if (output_element) {
-            if (output_element.getContext) {
-                output_ctx = output_element.getContext();
+        /**
+        * Given a context, canvas or image - return a Context2D
+        * will return undefined if unable to aquire a context
+        * @param o - canvas, context or image
+        * @return context - drawing context
+        * */        
+        this.getContext = function(o) {
+            if (!o) {return undefined;}
+            var context;
+            var type = o.constructor.name;
+            if (type == "CanvasRenderingContext2D") {
+                context = o;
             }
-            if (output_element.putImageData) {
-                output_ctx = output_element;
+            else if (type == "HTMLCanvasElement") {
+                context = o.getContext('2d');
             }
+            else if (type == "HTMLImageElement") {
+                context = this.replaceElementWithCanvasAndGetContext(o);
+                context.drawImage(o,0,0,width,height);
+            }
+            if (!context) {return undefined;}
+            context.imageSmoothingEnabled = false;
+            return context;
         }
-        output_ctx.putImageData(output_image,0,0);
         
-
+        
+        var context_input = this.getContext(input);
+        var input_image = context_input.getImageData(0,0,width,height);
+        var output_image = dither_algorithum(input_image,width,height,palette,step);
+        var output_context = this.getContext(output) || context_input;
+        output_context.putImageData(output_image,0,0);
+        
         // Turn it on
         //canvas.style.visibility = "visible";
     }
