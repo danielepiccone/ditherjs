@@ -329,10 +329,17 @@ var DitherJS = function DitherJS(selector,opt) {
     /**
     * This does all the dirty things
     * */
-    this._dither = function(el,palette) {
+    this._dither = function(el,algorithum_name,palette) {
         var ditherCtx = this;
         if (!palette) {
             palette = self.opt.palette;
+        }
+        if (!algorithum_name) {
+            algorithum_name = self.opt.algorithm;
+        }
+        var dither_algorithum = algorithums[algorithum_name]
+        if (!dither_algorithum){
+            throw new Error('Not a valid algorithm', algorithum_name, Object.keys(algorithums));
         }
 
         // Take image size
@@ -345,7 +352,7 @@ var DitherJS = function DitherJS(selector,opt) {
         * @param node - the image element
         * @return context - drawing context
         * */
-        this.getContext = function(el) {
+        this.replaceElementWithCanvasAndGetContext = function(el) {
             var canvas = document.createElement('canvas');
             // this can influence the quality of the acquistion
             canvas.height = el.clientHeight;
@@ -366,14 +373,13 @@ var DitherJS = function DitherJS(selector,opt) {
             return ctx;    
         }
 
-        var ctx = this.getContext(el);
+        var ctx = this.replaceElementWithCanvasAndGetContext(el);
 
         // Put the picture in
         ctx.drawImage(el,0,0,w,h);
         // Pick image data
         var in_image = ctx.getImageData(0,0,w,h);
-        var out_image = algorithums[self.opt.algorithm](in_image,w,h,palette);
-        //  else {throw new Error('Not a valid algorithm');}
+        var out_image = dither_algorithum(in_image,w,h,palette);
         // Put image data
         ctx.putImageData(out_image,0,0);
 
