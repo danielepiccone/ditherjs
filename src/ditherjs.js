@@ -42,7 +42,6 @@ var DitherJS = function DitherJS(selector,opt) {
         * @return i - the index of the coloser color
         * */
         var approximateColor = function(color, palette) {
-            if (!palette) {palette = self.opt.palette;}
             var findIndex = function(fun,arg,list,min) {
                 if (list.length == 2) {
                     if (fun(arg,min) <= fun(arg,list[1])) {
@@ -76,7 +75,7 @@ var DitherJS = function DitherJS(selector,opt) {
         
         return {
             // OrderedDither -------------------------------------------------------
-            ordered: function(in_imgdata,w,h) {
+            ordered: function(in_imgdata,w,h,palette) {
                 // Create a new empty image
                 var out_imgdata = ctx.createImageData(w,h);
                 var d = new Uint8ClampedArray(in_imgdata.data);
@@ -110,7 +109,7 @@ var DitherJS = function DitherJS(selector,opt) {
                         //var tg = threshold(d[g]);
                         //var tb = threshold(d[b]);
                         var color = new Array(d[r],d[g],d[b]); 
-                        var approx = approximateColor(color);
+                        var approx = approximateColor(color, palette);
                         var tr = approx[0];
                         var tg = approx[1];
                         var tb = approx[2];
@@ -138,7 +137,7 @@ var DitherJS = function DitherJS(selector,opt) {
             },
     
             // Atkinson ------------------------------------------------------------
-            atkinson: function(in_imgdata,w,h) {
+            atkinson: function(in_imgdata,w,h,palette) {
                 // Create a new empty image
                 var out_imgdata = ctx.createImageData(w,h);
                 var d = new Uint8ClampedArray(in_imgdata.data);
@@ -163,7 +162,7 @@ var DitherJS = function DitherJS(selector,opt) {
                         var a = i+3;
     
                         var color = new Array(d[r],d[g],d[b]); 
-                        var approx = approximateColor(color);
+                        var approx = approximateColor(color,palette);
                         
                         var q = [];
                         q[r] = d[r] - approx[0];
@@ -214,7 +213,7 @@ var DitherJS = function DitherJS(selector,opt) {
             },
     
             // Error Diffusion -----------------------------------------------------
-            errorDiffusion: function(in_imgdata,w,h) {
+            errorDiffusion: function(in_imgdata,w,h,palette) {
                 // Create a new empty image
                 var out_imgdata = ctx.createImageData(w,h);
                 var d = new Uint8ClampedArray(in_imgdata.data);
@@ -246,7 +245,7 @@ var DitherJS = function DitherJS(selector,opt) {
                         var a = i+3;
     
                         var color = new Array(d[r],d[g],d[b]); 
-                        var approx = approximateColor(color);
+                        var approx = approximateColor(color,palette);
                         
                         var q = [];
                         q[r] = d[r] - approx[0];
@@ -330,8 +329,11 @@ var DitherJS = function DitherJS(selector,opt) {
     /**
     * This does all the dirty things
     * */
-    this._dither = function(el) {
+    this._dither = function(el,palette) {
         var ditherCtx = this;
+        if (!palette) {
+            palette = self.opt.palette;
+        }
 
         // Take image size
         var h = el.clientHeight;
@@ -370,7 +372,7 @@ var DitherJS = function DitherJS(selector,opt) {
         ctx.drawImage(el,0,0,w,h);
         // Pick image data
         var in_image = ctx.getImageData(0,0,w,h);
-        var out_image = algorithums[self.opt.algorithm](in_image,w,h);
+        var out_image = algorithums[self.opt.algorithm](in_image,w,h,palette);
         //  else {throw new Error('Not a valid algorithm');}
         // Put image data
         ctx.putImageData(out_image,0,0);
