@@ -329,7 +329,7 @@ var DitherJS = function DitherJS(selector,opt) {
     /**
     * This does all the dirty things
     * */
-    this._dither = function(el,algorithum_name,palette) {
+    this._dither = function(input_element,algorithum_name,palette,output_element) {
         var ditherCtx = this;
         palette = palette || self.opt.palette;
         algorithum_name = algorithum_name || self.opt.algorithm;
@@ -339,8 +339,8 @@ var DitherJS = function DitherJS(selector,opt) {
         }
 
         // Take image size
-        var width = el.clientWidth || el.width;
-        var height = el.clientHeight || el.height;
+        var width = input_element.clientWidth || input_element.width;
+        var height = input_element.clientHeight || input_element.height;
         var ctx;
 
         /**
@@ -370,13 +370,13 @@ var DitherJS = function DitherJS(selector,opt) {
             return ctx;    
         }
         
-        if (el.nodeName == "CANVAS") {
-            ctx = el.getContext('2d');
+        if (input_element.nodeName == "CANVAS") {
+            ctx = input_element.getContext('2d');
         }
         else {
-            ctx = this.replaceElementWithCanvasAndGetContext(el);
+            ctx = this.replaceElementWithCanvasAndGetContext(input_element);
             // Put the picture in
-            ctx.drawImage(el,0,0,width,height);
+            ctx.drawImage(input_element,0,0,width,height);
         }
         ctx.imageSmoothingEnabled = false;
         
@@ -385,7 +385,19 @@ var DitherJS = function DitherJS(selector,opt) {
         var in_image = ctx.getImageData(0,0,width,height);
         var out_image = dither_algorithum(in_image,width,height,palette);
         // Put image data
-        ctx.putImageData(out_image,0,0);
+
+        
+        var output_ctx = ctx;
+        if (output_element) {
+            if (output_element.getContext) {
+                output_ctx = output_element.getContext();
+            }
+            if (output_element.putImageData) {
+                output_ctx = output_element;
+            }
+        }
+        output_ctx.putImageData(out_image,0,0);
+        
 
         // Turn it on
         //canvas.style.visibility = "visible";
