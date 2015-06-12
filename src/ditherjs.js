@@ -6,18 +6,9 @@
 
 "use strict";
 
-/**
-* Process a series of img elements and make them canvas graphics
-*
-* @param selector - the selector of the elements to process
-* @param opt - the options object
-*/
 
-var DitherJS = function DitherJS(selector,opt) {
-    var self = this;
-
-    // Algorithums -------------------------------------------------------------
-    var algorithums = function _algoithums(){
+var DitherJSInternals = {
+    algorithums: function _algoithums(){
 
         var ctx = document.createElement('canvas').getContext('2d');  // Unattached canvas element to involke createImageData
         /**
@@ -289,11 +280,62 @@ var DitherJS = function DitherJS(selector,opt) {
             },
     
         }
-    }();
+    }(),
 
     
-    
-    
+    dither: function(input,algorithum_name,palette,step,output) {
+        var dither_algorithum = this.algorithums[algorithum_name];
+        if (!dither_algorithum){
+            throw new Error('Not a valid algorithm', algorithum_name, Object.keys(algorithums));
+        }
+
+        // Aquire image dimensions (regardless of input type)
+        var width = input.clientWidth || input.width || input.canvas.width;
+        var height = input.clientHeight || input.height || input.canvas.height;
+
+        /**
+        * Given a context, canvas or image - return a Context2D
+        * will return undefined if unable to aquire a context
+        * @param o - canvas, context or image
+        * @return context - drawing context
+        * */        
+        this.getContext = function(o) {
+            if (!o) {return undefined;}
+            var context;
+            var type = o.constructor.name;
+            if (type == "CanvasRenderingContext2D") {
+                context = o;
+            }
+            else if (type == "HTMLCanvasElement") {
+                context = o.getContext('2d');
+            }
+            if (!context) {return undefined;}
+            context.imageSmoothingEnabled = false;
+            return context;
+        }
+        
+        
+        var context_input = this.getContext(input);
+        var input_image = context_input.getImageData(0,0,width,height);
+        var output_image = dither_algorithum(input_image,width,height,palette,step);
+        var output_context = this.getContext(output) || context_input;
+        output_context.putImageData(output_image,0,0);
+        
+        // Turn it on
+        //canvas.style.visibility = "visible";
+    }
+};
+
+/**
+* Process a series of img elements and make them canvas graphics
+*
+* @param selector - the selector of the elements to process
+* @param opt - the options object
+*/
+
+var DitherJS = function DitherJS(selector,opt) {
+    var self = this;
+
     //--------------------------------------------------------------------------
     
     // Default
@@ -331,75 +373,21 @@ var DitherJS = function DitherJS(selector,opt) {
         palette = palette || self.opt.palette;
         step = step || self.opt.step
         algorithum_name = algorithum_name || self.opt.algorithm;
-        var dither_algorithum = algorithums[algorithum_name]
-        if (!dither_algorithum){
-            throw new Error('Not a valid algorithm', algorithum_name, Object.keys(algorithums));
-        }
 
-        // Aquire image dimensions (regardless of input type)
-        var width = input.clientWidth || input.width || input.canvas.width;
-        var height = input.clientHeight || input.height || input.canvas.height;
-
-        /**
-        * Given an image element substitute it with a canvas
-        * and return the context
-        * @param node - the image element
-        * @return context - drawing context
-        * */
-        this.replaceElementWithCanvasAndGetContext = function(el) {
+        // Replace ImageElement with Canvas
+        if (input.constructor.name == "HTMLImageElement") {
             var canvas = document.createElement('canvas');
-            // this can influence the quality of the acquistion
-            canvas.height = el.clientHeight;
-            canvas.width = el.clientWidth;
-            el.parentNode.replaceChild(canvas,el);
-
-            // Inherit classes
-            canvas.className = el.className;
-            canvas.className = canvas.className.replace(self.opt.className,' ');
-            // Inherit Styles
-
-            // Turn it off
-            // canvas.style.visibility = "hidden";
-
-            return canvas.getContext('2d');
+            canvas.height = input.clientHeight;
+            canvas.width = input.clientWidth;
+            input.parentNode.replaceChild(canvas,input);
+            canvas.className = input.className.replace(self.opt.className,' ');
+            var context = canvas.getContext('2d');
+            context.drawImage(input,0,0,canvas.width,canvas.height);
+            input = context;
         }
 
-        /**
-        * Given a context, canvas or image - return a Context2D
-        * will return undefined if unable to aquire a context
-        * @param o - canvas, context or image
-        * @return context - drawing context
-        * */        
-        this.getContext = function(o) {
-            if (!o) {return undefined;}
-            var context;
-            var type = o.constructor.name;
-            if (type == "CanvasRenderingContext2D") {
-                context = o;
-            }
-            else if (type == "HTMLCanvasElement") {
-                context = o.getContext('2d');
-            }
-            else if (type == "HTMLImageElement") {
-                context = this.replaceElementWithCanvasAndGetContext(o);
-                context.drawImage(o,0,0,width,height);
-            }
-            if (!context) {return undefined;}
-            context.imageSmoothingEnabled = false;
-            return context;
-        }
-        
-        
-        var context_input = this.getContext(input);
-        var input_image = context_input.getImageData(0,0,width,height);
-        var output_image = dither_algorithum(input_image,width,height,palette,step);
-        var output_context = this.getContext(output) || context_input;
-        output_context.putImageData(output_image,0,0);
-        
-        // Turn it on
-        //canvas.style.visibility = "visible";
+        DitherJSInternals.dither(input, algorithum_name, palette, step, output);
     }
-
 
     /**
     * Main
@@ -422,7 +410,7 @@ var DitherJS = function DitherJS(selector,opt) {
 * Register AMD module
 * */
 if (typeof define === 'function' && define.amd) {
-    define('ditherjs', function(){
+    define('ditherjs', [], function(){
         // This function is expected to instantiate the module
         // in this case returns the constructor
         return DitherJS;
