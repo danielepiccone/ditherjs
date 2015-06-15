@@ -8,6 +8,75 @@
 
 
 var DitherJSInternals = {
+    palettes: {
+        DOS_CGA: [
+            [  0,   0,   0],  // black
+            [255,   0, 255],  // magenta
+            [  0, 255, 255],  // cyan
+            [255, 255, 255]   // white
+        ],
+        DOS_EGA: [
+            [  0,   0,   0],  //  0 Ð black (#000000)	000000	0
+            [  0,   0, 170],  //  1 Ð blue (#0000AA)	000001	1
+            [  0, 170,   0],  //  2 Ð green (#00AA00)	000010	2
+            [  0, 170, 170],  //  3 Ð cyan (#00AAAA)	000011	3
+            [170,   0,   0],  //  4 Ð red (#AA0000)	000100	4
+            [170,   0, 170],  //  5 Ð magenta (#AA00AA)	000101	5
+            [170,  85,   0],  //  6 Ð brown (#AA5500)	010100	20
+            [170, 170, 170],  //  7 Ð white / light gray (#AAAAAA)	000111	7
+            [ 85,  85,  85],  //  8 Ð dark gray / bright black (#555555)	111000	56
+            [ 85,  85, 255],  //  9 Ð bright blue (#5555FF)	111001	57
+            [ 85, 255,  85],  // 10 Ð bright green (#55FF55)	111010	58
+            [ 85, 255, 255],  // 11 Ð bright cyan (#55FFFF)	111011	59
+            [ 85,  85,  85],  // 12 Ð bright red (#FF5555)	111100	60
+            [255,  85, 255],  // 13 Ð bright magenta (#FF55FF)	111101	61
+            [255, 255,  85],  // 14 Ð bright yellow (#FFFF55)	111110	62
+            [255, 255, 255]   // 15 Ð bright white (#FFFFFF)	111111	63
+        ],
+        DOS_VGA_16: [
+            
+        ],
+        APPLE2: [
+            [  0,   0,   0],  //  0 Ð black (#000000)
+            [114,  38,  64],  //  1 Ð magenta (#722640)
+            [ 64,  51, 127],  //  2 Ð dark blue (#40337f)
+            [228,  52, 254],  //  3 Ð purple (#e434fe)
+            [ 14,  89,  64],  //  4 Ð dark green (#0e5940)
+            [127, 127, 127],  //  5 Ð grey1 (#7f7f7f)
+            [ 27, 154, 254],  //  6 Ð medium blue (#1b9afe)
+            [191, 179, 255],  //  7 Ð light blue (#bfb3ff)
+            [ 64,  76,   0],  //  8 Ð brown (#404c00)
+            [228, 101,   1],  //  9 Ð orange (#e46501)
+            //[  0,   0,    0],  // 10 Ð grey2 (#7f7f7f) // DUplicate in palette
+            [241, 166, 191],  // 11 Ð pink (#f1a6bf)
+            [ 27, 203,   1],  // 12 Ð green (#1bcb01)
+            [191, 204, 128],  // 13 Ð yellow (#bfcc80)
+            [141, 217, 191],  // 14 Ð aqua (#8dd9bf)
+            [255, 255, 255]  // 15 Ð white (#ffffff)            
+        ],
+        C64: [
+            [  0,   0,   0],  //  0 Ð black (#000000)
+            [255, 255, 255],  //  1 Ð white (#ffffff)
+            [136,  57,  50],  //  2 Ð red (#883932)
+            [103, 182, 189],  //  3 Ð cyan (#67b6bd)
+            [139,  63, 150],  //  4 Ð purple (#8b3f96)
+            [ 85, 160,  73],  //  5 Ð green (#55a049)
+            [ 64,  49, 141],  //  6 Ð blue (#40318d)
+            [191, 206, 114],  //  7 Ð yellow (#bfce72)
+            [139,  84,  41],  //  8 Ð orange (#8b5429)
+            [ 87,  66,   1],  //  9 Ð brown (#574200)
+            [184, 105,  98],  // 10 Ð light red (#b86962)
+            [ 80,  80,  80],  // 11 Ð dark grey (#505050)
+            [120, 120, 120],  // 12 Ð grey (#787878)
+            [148, 224, 137],  // 13 Ð light green (#94e089)
+            [120, 105, 196],  // 14 Ð light blue (#7869c4)
+            [159, 159, 159]   // 15 Ð light grey (#9f9f9f)
+        ],
+        AMIGA: [
+            
+        ]
+    },
+    
     algorithums: function _algoithums(){
 
         var ctx = document.createElement('canvas').getContext('2d');  // Unattached canvas element to involke createImageData
@@ -67,7 +136,7 @@ var DitherJSInternals = {
         return {
             // OrderedDither -------------------------------------------------------
             ordered: function(in_imgdata,w,h,palette, step) {
-                console.log("ordered");
+                //console.log("ordered");
                 // Create a new empty image
                 var out_imgdata = ctx.createImageData(w,h);
                 var d = new Uint8ClampedArray(in_imgdata.data);
@@ -128,7 +197,7 @@ var DitherJSInternals = {
     
             // Atkinson ------------------------------------------------------------
             atkinson: function(in_imgdata,w,h,palette,step) {
-                console.log("atkinson");
+                //console.log("atkinson");
                 // Create a new empty image
                 var out_imgdata = ctx.createImageData(w,h);
                 var d = new Uint8ClampedArray(in_imgdata.data);
@@ -203,7 +272,7 @@ var DitherJSInternals = {
     
             // Error Diffusion -----------------------------------------------------
             errorDiffusion: function(in_imgdata,w,h,palette,step) {
-                console.log("errorDiffusion");
+                //console.log("errorDiffusion");
                 // Create a new empty image
                 var out_imgdata = ctx.createImageData(w,h);
                 var d = new Uint8ClampedArray(in_imgdata.data);
@@ -335,20 +404,13 @@ var DitherJSInternals = {
 
 var DitherJS = function DitherJS(selector,opt) {
     var self = this;
-
-    //--------------------------------------------------------------------------
     
     // Default
     self.opt = opt || {};
     self.opt.step = self.opt.step || 1; // works better with 1,3,5,7
     self.opt.className = self.opt.className || 'dither';
     self.opt.algorithm = self.opt.algorithm || 'ordered';
-    self.opt.palette = self.opt.palette || [
-        [0,0,0],
-        [255,0,255],
-        [0,255,255],
-        [255,255,255]
-    ];
+    self.opt.palette = self.opt.palette || DitherJSInternals.palettes.DOS_CGA;
 
     this.palette = self.opt.palette;
 
