@@ -362,7 +362,7 @@ var DitherJSInternals = {
         this.getContext = function(o) {
             if (!o) {return undefined;}
             var context;
-            var type = o.constructor.name;
+            var type = o.constructor.name;  // It should be safe to use constructor.name as these are refering to System level objects.
             if (type == "CanvasRenderingContext2D") {
                 context = o;
             }
@@ -374,15 +374,11 @@ var DitherJSInternals = {
             return context;
         }
         
-        
         var context_input = this.getContext(input);
         var input_image = context_input.getImageData(0,0,width,height);
         var output_image = dither_algorithum(input_image,width,height,palette,step);
         var output_context = this.getContext(output) || context_input;
         output_context.putImageData(output_image,0,0);
-        
-        // Turn it on
-        //canvas.style.visibility = "visible";
     }
 };
 
