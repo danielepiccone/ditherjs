@@ -49,12 +49,12 @@
                 
                 function openStream(stream) {
                     console.log("Open Video Stream");
+                    video.addEventListener('play', update_video_canvas);
                     if (window.URL) {
                         video.src = window.URL.createObjectURL(stream);
                     } else {
                         video.src = stream;
                     }
-                    video.addEventListener('play', update_video_canvas);
                 };
                 
                 console.log('Request Video Stream');
