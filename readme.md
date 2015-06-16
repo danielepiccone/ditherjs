@@ -1,43 +1,62 @@
 #ditherJS
 
-A javascript library which transforms an <img> element 
+A javascript library which transforms an `<img>` element 
 into a dithered image using a fixed palette.
+
+Can also be used in conjunction with the `<video>` element to dither video in realtime. [Webcam Demo](demos/WebcamDither.html "Webcam Dithering")
+
 
 ###Usage:
 HTML:
-```
-<img src="..." class="dither" />
-```
+
+    <img src="..." class="dither" />
 
 JS:
-```
-new DitherJS('.dither'[,options]);
-```
+
+    new DitherJS('.dither'[,options]);
+
 or as a jQuery plugin
-```
-$('.dither').ditherJS(options);
-```
 
-options are defined as:
-```
-var options = {
-    "step": n // The step for the pixel quantization n = 1,2,3...
-    "palette": palette // an array of colors as rgb arrays
-    "className": "dither" // can be whatever class used in the constructor
-    "algorithm": "ordered" // can be "ordered" or "errorDiffusion"
-};
-```
+    $('.dither').ditherJS(options);
 
-the monochrome branch supports also
-```"monochrome": true```
+
+Options are defined as:
+
+    var options = {
+        "step": n // The step for the pixel quantization n = 1,2,3...
+        "palette": palette // an array of colors as rgb arrays
+        "className": "dither" // can be whatever class used in the constructor
+        "algorithm": "ordered" // can be "ordered", "atkinson" or "errorDiffusion"
+    };
+
+
+The monochrome branch supports also:
+
+    "monochrome": true
+
+DitherJSInternals exposes dither method for advanced useage:
+
+    DitherJSInternals.dither(
+        input,            // canvas or context object
+        algorithum_name,  // (see options above)
+        palette,          // (see options above)
+        step,             // (see options above)
+        output            // context or canvas to draw output
+    );
+
+There are a number of predefined paletts avalable as:
+
+    DitherJSInternals.palettes
 
 
 ### Testimonials
 
-Useful as a comb to a bald man. -Anon
+* Useful as a comb to a bald man. -Anon
+* One of the most important javascript library's of the 21st century. -Allan Callaghan
 
 ### Changelog
 
+- Refactored lib to expose DitherJSInternals
 - jquery plugin wrapper
 
 author 2014 [Daniele Piccone](http://www.danielepiccone.com)
