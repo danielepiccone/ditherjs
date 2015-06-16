@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Test Realtime Video Dither</title>
+        <style>
+            .hidden {
+                display: none;
+            }
+            .fullscreen {
+                width: 100%;
+                height: 100%;
+                
+                -ms-interpolation-mode: nearest-neighbor;
+                image-rendering: -webkit-optimize-contrast;
+                image-rendering: -webkit-crisp-edges;
+                image-rendering: -moz-crisp-edges;
+                image-rendering: -o-crisp-edges;
+                image-rendering: pixelated;
+            }
+        </style>
+    </head>
+    <body>
+        <video id="video" autoplay="true" class="hidden"></video>
+        <canvas id="offscreenCanvas" class="hidden"></canvas>
+        <canvas id="ditheredCanvas" width="320" height="200" class="fullscreen"></canvas>
+        
+        <script src="../src/ditherjs.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var target_frames_per_second = 10;
+                var start_timestamp = Date.now();
+                var video = document.getElementById("video");
+                var canvas_offscreen = document.getElementById("offscreenCanvas");
+                var canvas_fullscreen = document.getElementById("ditheredCanvas");
+                var context_offscreen = canvas_offscreen.getContext('2d');
+                var context_fullscreen = canvas_fullscreen.getContext('2d');
+                
+                function update_video_canvas() {
+                    if (video.paused || video.ended) {return};
+                    context_offscreen.drawImage(video, 0, 0, canvas_offscreen.width, canvas_offscreen.height);
+                    DitherJSInternals.dither(context_offscreen, "ordered", DitherJSInternals.palettes.DOS_CGA, 1, context_fullscreen);
+                    setTimeout(update_video_canvas, (Date.now() - start_timestamp) % Math.floor(1000/target_frames_per_second) );
+                };
+                
+                function openStream(stream) {
+                    console.log("Open Video Stream");
+                    if (window.URL) {
+                        video.src = window.URL.createObjectURL(stream);
+                    } else {
+                        video.src = stream;
+                    }
+                    video.addEventListener('play', update_video_canvas);
+                };
+                
+                console.log('Request Video Stream');
+                navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+                navigator.getUserMedia(
+                    {audio: false, video: true},
+                    openStream,
+                    function(error){console.error(error);}
+                );
+            });
+        </script>
+    </body>
+</html>
