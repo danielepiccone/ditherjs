@@ -16,25 +16,22 @@ var DitherJSInternals = {
             [255, 255, 255]   // white
         ],
         DOS_EGA: [
-            [  0,   0,   0],  //  0 - black (#000000)	000000	0
-            [  0,   0, 170],  //  1 - blue (#0000AA)	000001	1
-            [  0, 170,   0],  //  2 - green (#00AA00)	000010	2
-            [  0, 170, 170],  //  3 - cyan (#00AAAA)	000011	3
-            [170,   0,   0],  //  4 - red (#AA0000)	000100	4
-            [170,   0, 170],  //  5 - magenta (#AA00AA)	000101	5
-            [170,  85,   0],  //  6 - brown (#AA5500)	010100	20
-            [170, 170, 170],  //  7 - white / light gray (#AAAAAA)	000111	7
-            [ 85,  85,  85],  //  8 - dark gray / bright black (#555555)	111000	56
-            [ 85,  85, 255],  //  9 - bright blue (#5555FF)	111001	57
-            [ 85, 255,  85],  // 10 - bright green (#55FF55)	111010	58
-            [ 85, 255, 255],  // 11 - bright cyan (#55FFFF)	111011	59
-            [ 85,  85,  85],  // 12 - bright red (#FF5555)	111100	60
-            [255,  85, 255],  // 13 - bright magenta (#FF55FF)	111101	61
-            [255, 255,  85],  // 14 - bright yellow (#FFFF55)	111110	62
-            [255, 255, 255]   // 15 - bright white (#FFFFFF)	111111	63
-        ],
-        DOS_VGA_16: [
-            
+            [  0,   0,   0],  //  0 - black (#000000)
+            [  0,   0, 170],  //  1 - blue (#0000AA)
+            [  0, 170,   0],  //  2 - green (#00AA00)
+            [  0, 170, 170],  //  3 - cyan (#00AAAA)
+            [170,   0,   0],  //  4 - red (#AA0000)
+            [170,   0, 170],  //  5 - magenta (#AA00AA)
+            [170,  85,   0],  //  6 - brown (#AA5500)
+            [170, 170, 170],  //  7 - white / light gray (#AAAAAA)
+            [ 85,  85,  85],  //  8 - dark gray / bright black (#555555)
+            [ 85,  85, 255],  //  9 - bright blue (#5555FF)
+            [ 85, 255,  85],  // 10 - bright green (#55FF55)
+            [ 85, 255, 255],  // 11 - bright cyan (#55FFFF)
+            [ 85,  85,  85],  // 12 - bright red (#FF5555)
+            [255,  85, 255],  // 13 - bright magenta (#FF55FF)
+            [255, 255,  85],  // 14 - bright yellow (#FFFF55)
+            [255, 255, 255]   // 15 - bright white (#FFFFFF)
         ],
         APPLE2: [
             [  0,   0,   0],  //  0 - black (#000000)
@@ -52,7 +49,7 @@ var DitherJSInternals = {
             [ 27, 203,   1],  // 12 - green (#1bcb01)
             [191, 204, 128],  // 13 - yellow (#bfcc80)
             [141, 217, 191],  // 14 - aqua (#8dd9bf)
-            [255, 255, 255]  // 15 - white (#ffffff)            
+            [255, 255, 255]  // 15 - white (#ffffff)
         ],
         C64: [
             [  0,   0,   0],  //  0 - black (#000000)
@@ -71,9 +68,6 @@ var DitherJSInternals = {
             [148, 224, 137],  // 13 - light green (#94e089)
             [120, 105, 196],  // 14 - light blue (#7869c4)
             [159, 159, 159]   // 15 - light grey (#9f9f9f)
-        ],
-        AMIGA: [
-            
         ]
     },
     
