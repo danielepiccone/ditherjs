@@ -28,7 +28,11 @@
         <script src="../src/ditherjs.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                var target_frames_per_second = 10;
+                var options = {
+                    target_frames_per_second: 10,
+                    dither_method: "ordered",
+                    palette: DitherJSInternals.palettes.DOS_CGA
+                };
                 var start_timestamp = Date.now();
                 var video = document.getElementById("video");
                 var canvas_offscreen = document.getElementById("offscreenCanvas");
@@ -39,8 +43,8 @@
                 function update_video_canvas() {
                     if (video.paused || video.ended) {return};
                     context_offscreen.drawImage(video, 0, 0, canvas_offscreen.width, canvas_offscreen.height);
-                    DitherJSInternals.dither(context_offscreen, "ordered", DitherJSInternals.palettes.DOS_CGA, 1, context_fullscreen);
-                    setTimeout(update_video_canvas, (Date.now() - start_timestamp) % Math.floor(1000/target_frames_per_second) );
+                    DitherJSInternals.dither(context_offscreen, options.dither_method, options.palette, 1, context_fullscreen);
+                    setTimeout(update_video_canvas, (Date.now() - start_timestamp) % Math.floor(1000/options.target_frames_per_second) );
                 };
                 
                 function openStream(stream) {
