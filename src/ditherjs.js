@@ -123,15 +123,6 @@ var DitherJSInternals = {
             var found_color = findIndex(colorDistance,color,palette,palette[0]);
             return found_color;
         }
-    
-        /**
-        * Threshold function
-        * */
-        var threshold = function(value) {
-            var result = value < 127 ? 0 : 255;
-            return result;            
-        };
-    
         
         return {
             // OrderedDither -------------------------------------------------------
@@ -431,7 +422,6 @@ var DitherJS = function DitherJS(selector,opt) {
     * This does all the dirty things
     * */
     this._dither = function(input,algorithum_name,palette,step,output) {
-        var ditherCtx = this;
         palette = palette || self.opt.palette;
         step = step || self.opt.step
         algorithum_name = algorithum_name || self.opt.algorithm;
@@ -456,12 +446,10 @@ var DitherJS = function DitherJS(selector,opt) {
     * */
     try {
         var elements = document.querySelectorAll(selector);
-
         //  deal with multiple
         for (var i=0;i<elements.length;i++) {
             this._refreshDither(elements[i]);
         } 
-
     } catch (e) {
         // Officially not in the browser
     }
