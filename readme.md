@@ -5,6 +5,12 @@ into a dithered image using a fixed palette.
 
 Can also be used in conjunction with the `<video>` element to dither video in realtime. [Webcam Demo](demos/WebcamDither.html "Webcam Dithering")
 
+The demos cannot be run directly from the local filesystem. An simple example of serving the demos locally.
+
+    python -m SimpleHTTPServer 8080
+    python -m webbrowser -t "http://localhost:8080/demo/"
+    python -m webbrowser -t "http://localhost:8080/demo/WebcamDither.html"
+
 
 ###Usage:
 HTML:
