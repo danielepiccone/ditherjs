@@ -1,9 +1,9 @@
-#ditherJS
+# ditherJS
 
 A javascript library which transforms an <img> element
 into a dithered image using a fixed palette.
 
-###Usage:
+### Usage:
 HTML:
 ```
 <img src="..." class="dither" />
