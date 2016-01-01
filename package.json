@@ -1,24 +1,24 @@
 {
-    "name": "ditherjs",
-    "description": "Javascript image dithering library",
-    "version": "0.2.1",
-    "author": "Daniele Piccone <mail@danielepiccone.com>",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/dpiccone/ditherjs"
-    },
-    "keywords": [
-        "jquery-plugin",
-        "ecosystem:jquery",
-        "palette",
-        "color",
-        "dithering",
-        "pixel"
-    ],
-    "devDependencies": {
-        "grunt": "*",
-        "grunt-contrib-jshint": "*",
-        "grunt-contrib-uglify": "*",
-        "grunt-contrib-concat": "*"
-    }
+  "name": "ditherjs",
+  "description": "Javascript image dithering library",
+  "version": "0.2.2",
+  "author": "Daniele Piccone <mail@danielepiccone.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dpiccone/ditherjs"
+  },
+  "keywords": [
+    "jquery-plugin",
+    "ecosystem:jquery",
+    "palette",
+    "color",
+    "dithering",
+    "pixel"
+  ],
+  "devDependencies": {
+    "grunt": "*",
+    "grunt-contrib-jshint": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-concat": "*"
+  }
 }
