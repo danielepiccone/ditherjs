@@ -4,8 +4,6 @@
 * @author www.danielepiccone.com
 * */
 
-"use strict";
-
 /**
 * Process a series of img elements and make them canvas graphics
 *
@@ -13,7 +11,9 @@
 * @param opt - the options object
 */
 
-var DitherJS = (function (window) {
+var DitherJS = (function (window, document) {
+
+    'use strict';
 
     /**
     * Return a distance of two colors ina three dimensional space
@@ -25,11 +25,11 @@ var DitherJS = (function (window) {
         //if (a == null) return b;
         //if (b == null) return a;
         return Math.sqrt(
-            Math.pow( ((a[0]) - (b[0])),2 )
-            + Math.pow( ((a[1]) - (b[1])),2 )
-            + Math.pow( ((a[2]) - (b[2])),2 )
+            Math.pow( ((a[0]) - (b[0])),2 ) +
+            Math.pow( ((a[1]) - (b[1])),2 ) +
+            Math.pow( ((a[2]) - (b[2])),2 )
         );
-    };
+    }
 
     /**
     * Return the most closer color vs a common palette
@@ -78,15 +78,17 @@ var DitherJS = (function (window) {
             [ 16,  8, 14,  6 ]
         );
 
+        var r, g, b, a, q, i, color, approx, tr, tg, tb, dx, dy, di;
+
         for (var y=0;y<h;y += step) {
             for (var x=0;x<w;x += step) {
-                var i = (4*x) + (4*y*w);
+                i = (4*x) + (4*y*w);
 
                 // Define bytes
-                var r = i;
-                var g = i+1;
-                var b = i+2;
-                var a = i+3;
+                r = i;
+                g = i+1;
+                b = i+2;
+                a = i+3;
 
                 d[r] += m[x%4][y%4] * ratio;
                 d[g] += m[x%4][y%4] * ratio;
@@ -95,20 +97,20 @@ var DitherJS = (function (window) {
                 //var tr = threshold(d[r]);
                 //var tg = threshold(d[g]);
                 //var tb = threshold(d[b]);
-                var color = new Array(d[r],d[g],d[b]);
-                var approx = approximateColor(color, palette);
-                var tr = approx[0];
-                var tg = approx[1];
-                var tb = approx[2];
+                color = new Array(d[r],d[g],d[b]);
+                approx = approximateColor(color, palette);
+                tr = approx[0];
+                tg = approx[1];
+                tb = approx[2];
 
                 // d[r] = t;
                 // d[g] = t;
                 // d[b] = t;
 
                 // Draw a block
-                for (var dx=0;dx<step;dx++){
-                    for (var dy=0;dy<step;dy++){
-                        var di = i + (4 * dx) + (4 * w * dy);
+                for (dx=0;dx<step;dx++){
+                    for (dy=0;dy<step;dy++){
+                        di = i + (4 * dx) + (4 * w * dy);
 
                         // Draw pixel
                         d[di] = tr;
@@ -121,7 +123,7 @@ var DitherJS = (function (window) {
         }
         out_imgdata.data.set(d);
         return out_imgdata;
-    };
+    }
 
     function atkinsonDither(in_imgdata, ctx, palette, step, h, w) {
         var out_imgdata = ctx.createImageData(in_imgdata);
@@ -129,24 +131,26 @@ var DitherJS = (function (window) {
         var out = new Uint8ClampedArray(in_imgdata.data);
         var ratio = 1/8;
 
+        var $i = function(x,y) {
+            return (4*x) + (4*y*w);
+        };
+
+        var r, g, b, a, q, i, color, approx, tr, tg, tb, dx, dy, di;
+
         for (var y=0;y<h;y += step) {
             for (var x=0;x<w;x += step) {
-                var i = (4*x) + (4*y*w);
-
-                var $i = function(x,y) {
-                    return (4*x) + (4*y*w);
-                };
+                i = (4*x) + (4*y*w);
 
                 // Define bytes
-                var r = i;
-                var g = i+1;
-                var b = i+2;
-                var a = i+3;
+                r = i;
+                g = i+1;
+                b = i+2;
+                a = i+3;
 
-                var color = new Array(d[r],d[g],d[b]);
-                var approx = approximateColor(color, palette);
+                color = new Array(d[r],d[g],d[b]);
+                approx = approximateColor(color, palette);
 
-                var q = [];
+                q = [];
                 q[r] = d[r] - approx[0];
                 q[g] = d[g] - approx[1];
                 q[b] = d[b] - approx[2];
@@ -159,28 +163,28 @@ var DitherJS = (function (window) {
                 d[$i(x+(2*step),y) + 0] += ratio * q[r];
                 d[$i(x,y+(2*step)) + 0] += ratio * q[r];
 
-                d[$i(x+step,y) + 1] += ratio * q[r];
-                d[$i(x-step,y+step) + 1] += ratio * q[r];
-                d[$i(x,y+step) + 1] += ratio * q[r];
-                d[$i(x+step,y+step) + 1] += ratio * q[r];
-                d[$i(x+(2*step),y) + 1] += ratio * q[r];
-                d[$i(x,y+(2*step)) + 1] += ratio * q[r];
+                d[$i(x+step,y) + 1] += ratio * q[g];
+                d[$i(x-step,y+step) + 1] += ratio * q[g];
+                d[$i(x,y+step) + 1] += ratio * q[g];
+                d[$i(x+step,y+step) + 1] += ratio * q[g];
+                d[$i(x+(2*step),y) + 1] += ratio * q[g];
+                d[$i(x,y+(2*step)) + 1] += ratio * q[g];
 
-                d[$i(x+step,y) + 2] += ratio * q[r];
-                d[$i(x-step,y+step) + 2] += ratio * q[r];
-                d[$i(x,y+step) + 2] += ratio * q[r];
-                d[$i(x+step,y+step) + 2] += ratio * q[r];
-                d[$i(x+(2*step),y) + 2] += ratio * q[r];
-                d[$i(x,y+(2*step)) + 2] += ratio * q[r];
+                d[$i(x+step,y) + 2] += ratio * q[b];
+                d[$i(x-step,y+step) + 2] += ratio * q[b];
+                d[$i(x,y+step) + 2] += ratio * q[b];
+                d[$i(x+step,y+step) + 2] += ratio * q[b];
+                d[$i(x+(2*step),y) + 2] += ratio * q[b];
+                d[$i(x,y+(2*step)) + 2] += ratio * q[b];
 
-                var tr = approx[0];
-                var tg = approx[1];
-                var tb = approx[2];
+                tr = approx[0];
+                tg = approx[1];
+                tb = approx[2];
 
                 // Draw a block
-                for (var dx=0;dx<step;dx++){
-                    for (var dy=0;dy<step;dy++){
-                        var di = i + (4 * dx) + (4 * w * dy);
+                for (dx=0;dx<step;dx++){
+                    for (dy=0;dy<step;dy++){
+                        di = i + (4 * dx) + (4 * w * dy);
 
                         // Draw pixel
                         out[di] = tr;
@@ -193,7 +197,7 @@ var DitherJS = (function (window) {
         }
         out_imgdata.data.set(out);
         return out_imgdata;
-    };
+    }
 
     function errorDiffusionDither(in_imgdata, ctx, palette, step, h, w) {
         var out_imgdata = ctx.createImageData(in_imgdata);
@@ -207,24 +211,26 @@ var DitherJS = (function (window) {
             [ 16,  8, 14,  6 ]
         );
 
-        for (var y=0;y<h;y += step) {
-            for (var x=0;x<w;x += step) {
-                var i = (4*x) + (4*y*w);
+        var $i = function(x,y) {
+            return (4*x) + (4*y*w);
+        };
 
-                var $i = function(x,y) {
-                    return (4*x) + (4*y*w);
-                };
+        var r, g, b, a, q, i, color, approx, tr, tg, tb, dx, dy, di;
+
+        for (y=0;y<h;y += step) {
+            for (x=0;x<w;x += step) {
+                i = (4*x) + (4*y*w);
 
                 // Define bytes
-                var r = i;
-                var g = i+1;
-                var b = i+2;
-                var a = i+3;
+                r = i;
+                g = i+1;
+                b = i+2;
+                a = i+3;
 
-                var color = new Array(d[r],d[g],d[b]);
-                var approx = approximateColor(color, palette);
+                color = new Array(d[r],d[g],d[b]);
+                approx = approximateColor(color, palette);
 
-                var q = [];
+                q = [];
                 q[r] = d[r] - approx[0];
                 q[g] = d[g] - approx[1];
                 q[b] = d[b] - approx[2];
@@ -246,14 +252,14 @@ var DitherJS = (function (window) {
                 d[$i(x+step,y+step)+2] =  d[$i(x+step,y+step)+2] + 1 * ratio * q[b];
 
                 // Color
-                var tr = approx[0];
-                var tg = approx[1];
-                var tb = approx[2];
+                tr = approx[0];
+                tg = approx[1];
+                tb = approx[2];
 
                 // Draw a block
-                for (var dx=0;dx<step;dx++){
-                    for (var dy=0;dy<step;dy++){
-                        var di = i + (4 * dx) + (4 * w * dy);
+                for (dx=0;dx<step;dx++){
+                    for (dy=0;dy<step;dy++){
+                        di = i + (4 * dx) + (4 * w * dy);
 
                         // Draw pixel
                         out[di] = tr;
@@ -266,7 +272,7 @@ var DitherJS = (function (window) {
         }
         out_imgdata.data.set(out);
         return out_imgdata;
-    };
+    }
 
     var DitherJS = function DitherJS (selector, opt) {
         var self = this;
@@ -293,7 +299,7 @@ var DitherJS = (function (window) {
                 var start_time = Date.now();
                 self._dither(el);
                 console.log('Microtime: ', Date.now()-start_time );
-            }
+            };
         };
 
         /**
@@ -340,8 +346,7 @@ var DitherJS = (function (window) {
                 var ctx = canvas.getContext('2d');
                 ctx.imageSmoothingEnabled = false;
                 return ctx;
-            }
-
+            };
 
             var ctx = this.getContext(el);
 
@@ -351,12 +356,13 @@ var DitherJS = (function (window) {
             // Pick image data
             var in_image = ctx.getImageData(0,0,w,h);
 
+            var out_image;
             if (self.opt.algorithm == 'errorDiffusion')
-                var out_image = errorDiffusionDither(in_image, ctx, self.opt.palette, self.opt.step, h, w);
+                out_image = errorDiffusionDither(in_image, ctx, self.opt.palette, self.opt.step, h, w);
             else if (self.opt.algorithm == 'ordered')
-                var out_image = orderedDither(in_image, ctx, self.opt.palette, self.opt.step, h, w);
+                out_image = orderedDither(in_image, ctx, self.opt.palette, self.opt.step, h, w);
             else if (self.opt.algorithm == 'atkinson')
-                var out_image = atkinsonDither(in_image, ctx, self.opt.palette, self.opt.step, h, w);
+                out_image = atkinsonDither(in_image, ctx, self.opt.palette, self.opt.step, h, w);
             else
                 throw new Error('Not a valid algorithm');
 
@@ -365,12 +371,12 @@ var DitherJS = (function (window) {
 
             // Turn it on
             //canvas.style.visibility = "visible";
-        }
-
+        };
 
         /**
         * Main
         * */
+
         try {
             var elements = document.querySelectorAll(selector);
 
@@ -391,7 +397,7 @@ var DitherJS = (function (window) {
 
     return DitherJS;
 
-})(window);
+})(window, document);
 
 /**
 * Register AMD module
@@ -400,7 +406,7 @@ if (typeof define === 'function' && define.amd) {
     define('ditherjs', function(){
         return DitherJS;
     });
-};
+}
 
 /**
 * Export class for node

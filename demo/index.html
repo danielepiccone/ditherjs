@@ -1,12 +1,12 @@
 <!doctype html>
 <html>
     <head>
-        <title>Test</title>    
+        <title>Test</title>
         <style>
             .dither {
                 visibility:hidden;
                 width:100%;
-            }    
+            }
         </style>
     </head>
     <body>
@@ -16,9 +16,8 @@
         <script src="../src/jquery.ditherjs.js"></script>
         <script>
             $(function() {
-                console.log('ready');
                 var options = {
-                    "step":3,
+                    "step": 3,
                     "algorithm": "atkinson"
                 };
                 $('.dither').ditherJS(options);
