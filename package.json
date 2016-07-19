@@ -15,6 +15,7 @@
     "dithering",
     "pixel"
   ],
+  "main": "dist/ditherjs.min.js",
   "devDependencies": {
     "grunt": "*",
     "grunt-contrib-jshint": "*",
