@@ -18,8 +18,13 @@
   "main": "dist/ditherjs.min.js",
   "devDependencies": {
     "grunt": "*",
+    "grunt-contrib-concat": "*",
     "grunt-contrib-jshint": "*",
     "grunt-contrib-uglify": "*",
-    "grunt-contrib-concat": "*"
+    "unexpected": "^10.16.0",
+    "webpack-dev-server": "^1.15.0"
+  },
+  "dependencies": {
+    "canvas": "^1.4.0"
   }
 }
