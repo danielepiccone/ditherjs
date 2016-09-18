@@ -7,6 +7,9 @@
     "type": "git",
     "url": "https://github.com/dpiccone/ditherjs"
   },
+  "scripts": {
+    "dev:server": "webpack-dev-server"
+  },
   "keywords": [
     "jquery-plugin",
     "ecosystem:jquery",

@@ -44,14 +44,6 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(1);
-	module.exports = __webpack_require__(1);
-
-
-/***/ },
-/* 1 */
-/***/ function(module, exports, __webpack_require__) {
-
 	var __WEBPACK_AMD_DEFINE_RESULT__;/**
 	* Javascript dithering library
 	* @author 2014 Daniele Piccone
@@ -77,7 +69,7 @@
 	            throw new Error('InvalidAlgorithm');
 	        }
 
-	        this.opt.palette = this.opt.palette || __webpack_require__(3).defaultPalette;
+	        this.opt.palette = this.opt.palette || __webpack_require__(1).defaultPalette;
 
 	        try {
 	            var elements = window.document.querySelectorAll(selector);
@@ -94,8 +86,8 @@
 	    };
 
 	    DitherJS.orderedDither = __webpack_require__(2);
-	    DitherJS.atkinsonDither = __webpack_require__(4);
-	    DitherJS.errorDiffusionDither = __webpack_require__(5);
+	    DitherJS.atkinsonDither = __webpack_require__(3);
+	    DitherJS.errorDiffusionDither = __webpack_require__(4);
 
 	    DitherJS.prototype._replaceElementWithContext = function(el) {
 	        var canvas = window.document.createElement('canvas');
@@ -175,10 +167,56 @@
 
 
 /***/ },
+/* 1 */
+/***/ function(module, exports) {
+
+	function colorDistance(a,b) {
+	    return Math.sqrt(
+	        Math.pow( ((a[0]) - (b[0])),2 ) +
+	            Math.pow( ((a[1]) - (b[1])),2 ) +
+	            Math.pow( ((a[2]) - (b[2])),2 )
+	    );
+	}
+
+	function approximateColor(color, palette) {
+	    var findIndex = function(fun, arg, list, min) {
+	        if (list.length == 2) {
+	            if (fun(arg,min) <= fun(arg,list[1])) {
+	                return min;
+	            }else {
+	                return list[1];
+	            }
+	        } else {
+	            var tl = list.slice(1);
+	            if (fun(arg,min) <= fun(arg,list[1])) {
+	                min = min;
+	            } else {
+	                min = list[1];
+	            }
+	            return findIndex(fun,arg,tl,min);
+	        }
+	    };
+	    var found_color = findIndex(colorDistance, color, palette, palette[0]);
+	    return found_color;
+	}
+
+	module.exports = {
+	    approximateColor: approximateColor,
+	    colorDistance: colorDistance,
+	    defaultPalette: [
+	        [0, 0, 0],
+	        [255, 0, 255],
+	        [0, 255, 255],
+	        [255, 255, 255]
+	    ]
+	};
+
+
+/***/ },
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var utils = __webpack_require__(3);
+	var utils = __webpack_require__(1);
 
 	var approximateColor = utils.approximateColor;
 
@@ -243,55 +281,9 @@
 
 /***/ },
 /* 3 */
-/***/ function(module, exports) {
-
-	function colorDistance(a,b) {
-	    return Math.sqrt(
-	        Math.pow( ((a[0]) - (b[0])),2 ) +
-	            Math.pow( ((a[1]) - (b[1])),2 ) +
-	            Math.pow( ((a[2]) - (b[2])),2 )
-	    );
-	}
-
-	function approximateColor(color, palette) {
-	    var findIndex = function(fun, arg, list, min) {
-	        if (list.length == 2) {
-	            if (fun(arg,min) <= fun(arg,list[1])) {
-	                return min;
-	            }else {
-	                return list[1];
-	            }
-	        } else {
-	            var tl = list.slice(1);
-	            if (fun(arg,min) <= fun(arg,list[1])) {
-	                min = min;
-	            } else {
-	                min = list[1];
-	            }
-	            return findIndex(fun,arg,tl,min);
-	        }
-	    };
-	    var found_color = findIndex(colorDistance, color, palette, palette[0]);
-	    return found_color;
-	}
-
-	module.exports = {
-	    approximateColor: approximateColor,
-	    colorDistance: colorDistance,
-	    defaultPalette: [
-	        [0, 0, 0],
-	        [255, 0, 255],
-	        [0, 255, 255],
-	        [255, 255, 255]
-	    ]
-	};
-
-
-/***/ },
-/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var utils = __webpack_require__(3);
+	var utils = __webpack_require__(1);
 
 	var approximateColor = utils.approximateColor;
 
@@ -371,10 +363,10 @@
 
 
 /***/ },
-/* 5 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var utils = __webpack_require__(3);
+	var utils = __webpack_require__(1);
 
 	var approximateColor = utils.approximateColor;
 

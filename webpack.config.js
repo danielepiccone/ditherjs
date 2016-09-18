@@ -1,7 +1,10 @@
 module.exports = {
-    entry: './src/ditherjs.js',
+    entry: {
+        "ditherjs": "./src/ditherjs.js",
+        "ditherjs.jquery": "./src/ditherjs.jquery.js",
+    },
     output: {
-        path: './bin',
-        filename: 'ditherjs.bundle.js'
+        path: "./dist",
+        filename: "[name].dist.js"
     }
 };

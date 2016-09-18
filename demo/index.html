@@ -10,16 +10,17 @@
         </style>
     </head>
     <body>
-        <img class="dither" id="target" src="parrot-zoo.jpg" />
-        <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
-        <script src="../bin/ditherjs.bundle.js"></script>
+        <img class="dither" src="parrot-zoo.jpg" />
+        <img class="dither" src="Lamborghini-Countach-7.gif" />
+        <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+        <script src="/ditherjs.dist.js"></script>
         <script>
-            $(function() {
+            $(function () {
                 var options = {
                     "step": 3,
                     "algorithm": "ordered"
                 };
-                var ditherJs = new DitherJS('.dither', options);
+                new DitherJS('.dither', options);
             });
         </script>
     </body>
