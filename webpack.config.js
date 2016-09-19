@@ -1,10 +1,12 @@
 module.exports = {
     entry: {
-        "ditherjs": "./src/ditherjs.js",
-        "ditherjs.jquery": "./src/ditherjs.jquery.js",
+        "ditherjs": "./client.js",
+        "jquery.ditherjs": "./jquery.js",
     },
     output: {
         path: "./dist",
-        filename: "[name].dist.js"
+        filename: "[name].dist.js",
+        library: 'DitherJS',
+        libraryTarget: 'umd'
     }
 };

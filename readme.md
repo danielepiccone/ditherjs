@@ -1,47 +1,83 @@
 # ditherJS
 
-A javascript library which transforms an <img> element
-into a dithered image using a fixed palette.
+[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by/4.0/)
 
-### Usage:
-HTML:
-```
-<img src="..." class="dither" />
-```
+A javascript library which dithers an image using a fixed palette.
 
-JS:
-```
-new DitherJS('.dither'[,options]);
-```
-or as a jQuery plugin
-```
-$('.dither').ditherJS(options);
+Run `npm run demo:client` or `npm run demo:sever` to see it in action.
+
+## Installation and dependencies
+
+```sh
+$ npm install ditherjs --save
 ```
 
-options are defined as:
+Both client and server are exposed as commonJS modules to be used with webpack or browserify.
+
+The client-side version is also published with an UMD compatible wrapper and a jQuery plugin, those versions are in `./dist`
+
+The server-side version needs [node-canvas](https://github.com/Automattic/node-canvas) installed as a peer dependency to work, this is also needed to run run the tests during development.
+
+```sh
+$ npm install ditherjs canvas --save
 ```
+
+## Usage and options
+
+Any DitherJS instance exposes a `dither(target, [options])` method which accepts a *selector* a *Node<img>* or a *buffer* as a target and an optional options object.
+
+The options can be passed directly to the method or directly in the constructor.
+
+```javascript
 var options = {
-    "step": n // The step for the pixel quantization n = 1,2,3...
-    "palette": palette // an array of colors as rgb arrays
-    "className": "dither" // can be whatever class used in the constructor
-    "algorithm": "ordered" // can be "ordered" or "errorDiffusion"
+    "step": 1, // The step for the pixel quantization n = 1,2,3...
+    "palette": defaultPalette, // an array of colors as rgb arrays
+    "className": "dither", // the class of the <img> elements to target, used to flip the visibility
+    "algorithm": "ordered" // one of ["ordered", "diffusion", "atkinson"]
 };
 ```
 
-the monochrome branch supports also
-```"monochrome": true```
+A default palette is provided which is CGA Palette 1
 
-check the /demo for more informations.
+![Rick dangerhous II](http://www.rickdangerous.co.uk/cga20a.png)
+
+The palette structure is as an array of rgb colors `[[r,g,b]..]`
+
+### Client
+
+
+```javascript
+var DitherJS = require('ditherjs');
+
+var ditherjs = new DitherJS([,options]);
+ditherjs.dither(selector,[,options]); // should target <img> elements
+```
+
+as a jQuery plugin
+```javascript
+$('.dither').ditherJS(options);
+```
+
+or directly on the element
+```html
+<img src="..." onload="ditherjs.dither(this)" />
+```
+
+## Server
+
+```javascript
+var DitherJS = require('ditherjs/server');
+
+var ditherjs = new DitherJS([,options]);
+
+// get a buffer that can
+var buffer = fs.readFileSync('./myBeautifulFile.jpg|gif|png');
+
+ditherjs.dither(buffer,[,options]);
+```
 
 ### Testimonials
 
 Useful as a comb to a bald man. -Anon
 
-### Changelog
-
-- <video> rendering, courtesy of [@calaldees](https://github.com/calaldees)
-- jquery plugin wrapper
-
 author 2014 [Daniele Piccone](http://www.danielepiccone.com)
-
-license [GPL](https://gnu.org/licenses/gpl.html)

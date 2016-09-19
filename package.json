@@ -1,33 +1,43 @@
 {
   "name": "ditherjs",
-  "description": "Javascript image dithering library",
-  "version": "0.3.0",
+  "description": "Image dithering library",
+  "version": "0.9.0",
   "author": "Daniele Piccone <mail@danielepiccone.com>",
+  "main": "./client.js",
+  "homepage": "https://dpiccone.github.io/ditherjs/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dpiccone/ditherjs"
+    "url": "git@github.com:dpiccone/ditherjs.git"
   },
   "scripts": {
-    "dev:server": "webpack-dev-server"
+    "prepublish": "webpack -p",
+    "test": "mocha spec/",
+    "coverage": "nyc mocha spec/",
+    "demo:client": "webpack-dev-server --content-base demo.client",
+    "demo:server": "node demo.server/app.js"
   },
   "keywords": [
-    "jquery-plugin",
-    "ecosystem:jquery",
+    "graphic",
+    "graphics",
     "palette",
+    "palettes",
+    "pattern",
     "color",
     "dithering",
     "pixel"
   ],
   "main": "dist/ditherjs.min.js",
   "devDependencies": {
-    "grunt": "*",
-    "grunt-contrib-concat": "*",
-    "grunt-contrib-jshint": "*",
-    "grunt-contrib-uglify": "*",
-    "unexpected": "^10.16.0",
-    "webpack-dev-server": "^1.15.0"
+    "domino": "^1.0.25",
+    "express": "4.14.0",
+    "mocha": "3.0.2",
+    "nyc": "^8.3.0",
+    "unexpected": "10.16.0",
+    "webpack": "1.13.2",
+    "webpack-dev-server": "1.15.0"
   },
-  "dependencies": {
-    "canvas": "^1.4.0"
-  }
+  "browser": {
+    "canvas": false
+  },
+  "license": "CC-BY-4.0"
 }

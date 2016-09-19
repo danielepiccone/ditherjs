@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Test</title>
+        <style>
+            .dithered-image {
+                //visibility:hidden;
+            }
+        </style>
+        <script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
+        <script src="/ditherjs.dist.js"></script>
+        <script>
+            var options = {
+                "step": 3,
+                "algorithm": "ordered"
+            };
+            window.ditherjs = new DitherJS(options);
+        </script>
+    </head>
+    <body>
+        <img class="dithered-image" onload="ditherjs.dither(this)" src="parrot.jpg" />
+        <img class="dithered-image" onload="ditherjs.dither(this)" src="lamborghini.gif" />
+    </body>
+</html>
