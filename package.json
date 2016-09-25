@@ -28,7 +28,7 @@
   ],
   "main": "dist/ditherjs.min.js",
   "devDependencies": {
-    "domino": "^1.0.25",
+    "domino": "1.0.25",
     "express": "4.14.0",
     "mocha": "3.0.2",
     "nyc": "^8.3.0",
@@ -39,5 +39,5 @@
   "browser": {
     "canvas": false
   },
-  "license": "CC-BY-4.0"
+  "license": "CC-BY-SA-4.0"
 }
