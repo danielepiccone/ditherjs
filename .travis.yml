@@ -18,4 +18,4 @@ before_install:
 install:
     - npm install;
 script:
-    - npm i canvas && npm test
+    - npm i canvas && npm run coveralls

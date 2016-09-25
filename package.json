@@ -3,16 +3,17 @@
   "description": "Image dithering library",
   "version": "0.9.0",
   "author": "Daniele Piccone <mail@danielepiccone.com>",
-  "main": "./client.js",
+  "main": "dist/ditherjs.min.js",
   "homepage": "https://dpiccone.github.io/ditherjs/",
   "repository": {
     "type": "git",
     "url": "git@github.com:dpiccone/ditherjs.git"
   },
   "scripts": {
-    "prepublish": "webpack -p",
+    "preversion": "webpack -p",
     "test": "mocha spec/",
     "coverage": "nyc mocha spec/",
+    "coveralls": "nyc mocha spec/ && nyc report --reporter=text-lcov | coveralls",
     "demo:client": "webpack-dev-server --content-base demo.client",
     "demo:server": "node demo.server/app.js"
   },
@@ -26,12 +27,12 @@
     "dithering",
     "pixel"
   ],
-  "main": "dist/ditherjs.min.js",
   "devDependencies": {
+    "coveralls": "2.11.14",
     "domino": "1.0.25",
     "express": "4.14.0",
     "mocha": "3.0.2",
-    "nyc": "^8.3.0",
+    "nyc": "8.3.0",
     "unexpected": "10.16.0",
     "webpack": "1.13.2",
     "webpack-dev-server": "1.15.0"
