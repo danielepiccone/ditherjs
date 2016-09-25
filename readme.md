@@ -34,7 +34,6 @@ The options can be passed directly to the method or directly in the constructor.
 var options = {
     "step": 1, // The step for the pixel quantization n = 1,2,3...
     "palette": defaultPalette, // an array of colors as rgb arrays
-    "className": "dither", // the class of the <img> elements to target, used to flip the visibility
     "algorithm": "ordered" // one of ["ordered", "diffusion", "atkinson"]
 };
 ```
@@ -72,7 +71,7 @@ var DitherJS = require('ditherjs/server');
 
 var ditherjs = new DitherJS([,options]);
 
-// get a buffer that can
+// Get a buffer that can be loaded into a canvas
 var buffer = fs.readFileSync('./myBeautifulFile.jpg|gif|png');
 
 ditherjs.dither(buffer,[,options]);
