@@ -2,6 +2,7 @@
 
 [![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
 [![Build Status](https://travis-ci.org/dpiccone/ditherjs.svg?branch=master)](https://travis-ci.org/dpiccone/ditherjs)
+[![Coverage Status](https://coveralls.io/repos/github/dpiccone/ditherjs/badge.svg?branch=master)](https://coveralls.io/github/dpiccone/ditherjs?branch=master)
 
 A javascript library which dithers an image using a fixed palette.
 
