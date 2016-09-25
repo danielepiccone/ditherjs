@@ -148,8 +148,18 @@ describe('ditherjs.client', function() {
     describe('dither', function () {
         var ditherjs = new DitherJS();
 
-        it.skip('should call _fromImgElement if the argument is a Node', function () {
-            // TODO
+        it('should call _fromImgElement if the argument is a Node', function () {
+            var node = document.createElement('img');
+            document.body.appendChild(node);
+
+            var called = false;
+
+            var mockInstance = {
+                _fromImgElement: function () { called = true; }
+            };
+
+            ditherjs.dither.call(mockInstance, node);
+            expect(called, 'to be', true);
         });
 
         it('should call _fromSelector if the argument is a string', function () {
@@ -161,7 +171,6 @@ describe('ditherjs.client', function() {
 
             ditherjs.dither.call(mockInstance, '.foo');
             expect(called, 'to be', true);
-
         });
     });
 
@@ -172,8 +181,13 @@ describe('ditherjs.client', function() {
         element.className = 'boo dither bar';
         document.body.appendChild(element);
 
-        it.skip('should get the canvas context out of the element', function () {
+        it('should get the canvas context out of the element', function () {
             // TODO getContext() not implemented in Domino
+            try {
+                ditherjs._replaceElementWithCtx(element) ;
+            } catch (err) {
+                expect(err, 'to be defined');
+            }
         });
     });
 
