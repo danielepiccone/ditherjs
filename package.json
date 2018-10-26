@@ -1,7 +1,7 @@
 {
   "name": "ditherjs",
   "description": "Image dithering library",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "author": "Daniele Piccone <mail@danielepiccone.com>",
   "main": "dist/ditherjs.dist.js",
   "homepage": "https://dpiccone.github.io/ditherjs/",
