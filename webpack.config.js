@@ -4,7 +4,7 @@ module.exports = {
         "jquery.ditherjs": "./jquery.js",
     },
     output: {
-        path: "./dist",
+        path: __dirname + "/dist",
         filename: "[name].dist.js",
         library: 'DitherJS',
         libraryTarget: 'umd'
