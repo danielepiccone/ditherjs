@@ -1,7 +1,7 @@
 name: Run the specs
 on: [push, workflow_dispatch]
 env:
-  - CXX: g++-4.9
+  CXX: g++-4.9
 
 jobs:
   ci:
