@@ -13,7 +13,6 @@
     "preversion": "webpack -p",
     "test": "mocha spec/",
     "coverage": "nyc mocha spec/",
-    "coveralls": "nyc mocha spec/ && nyc report --reporter=text-lcov | coveralls",
     "demo:client": "webpack-dev-server --content-base demo.client",
     "demo:server": "node demo.server/app.js"
   },
@@ -28,7 +27,6 @@
     "pixel"
   ],
   "devDependencies": {
-    "coveralls": "2.11.14",
     "domino": "1.0.25",
     "express": "4.14.0",
     "mocha": "3.0.2",

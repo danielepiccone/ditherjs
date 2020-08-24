@@ -1,7 +1,5 @@
 name: Run the specs
 on: [push, workflow_dispatch]
-env:
-  CXX: g++-4.9
 
 jobs:
   ci:
@@ -30,4 +28,4 @@ jobs:
           npm install canvas # optional, needed for server tests
 
       - name: Run tests
-        run: npm run coveralls
+        run: npm run coverage
