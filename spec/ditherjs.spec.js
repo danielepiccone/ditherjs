@@ -139,7 +139,8 @@ describe('ditherjs.client', function() {
         [
             '_replaceElementWithCtx',
             '_fromImgElement',
-            '_fromSelector'
+            '_fromSelector',
+            '_fromCanvasElement'
         ].forEach(function (method) {
             expect(DitherJS.prototype.hasOwnProperty(method), 'to be', true);
         });
@@ -148,7 +149,7 @@ describe('ditherjs.client', function() {
     describe('dither', function () {
         var ditherjs = new DitherJS();
 
-        it('should call _fromImgElement if the argument is a Node', function () {
+        it('should call _fromImgElement if the argument is an Image', function () {
             var node = document.createElement('img');
             document.body.appendChild(node);
 
@@ -170,6 +171,20 @@ describe('ditherjs.client', function() {
             };
 
             ditherjs.dither.call(mockInstance, '.foo');
+            expect(called, 'to be', true);
+        });
+
+        it('should call _fromCanvasElement if the argument is a Canvas', function () {
+            var node = document.createElement('canvas');
+            document.body.appendChild(node);
+
+            var called = false;
+
+            var mockInstance = {
+                _fromCanvasElement: function () { called = true; }
+            };
+
+            ditherjs.dither.call(mockInstance, node);
             expect(called, 'to be', true);
         });
     });
