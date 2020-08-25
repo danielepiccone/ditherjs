@@ -33,7 +33,7 @@
     "nyc": "8.3.0",
     "unexpected": "10.16.0",
     "webpack": "1.13.2",
-    "webpack-dev-server": "1.15.0"
+    "webpack-dev-server": "3.11.0"
   },
   "browser": {
     "canvas": false
