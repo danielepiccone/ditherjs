@@ -77,6 +77,7 @@ ditherjs.dither(buffer,[,options]);
 
 ### Similar Libraries
 
+ - [RgbQuant.js](https://github.com/leeoniya/RgbQuant.js)
  - [dither-me-this](https://github.com/ShadowfaxRodeo/dither-me-this)
  - [floyd-steinberg](https://github.com/noopkat/floyd-steinberg)
 
