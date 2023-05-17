@@ -75,6 +75,12 @@ var buffer = fs.readFileSync('./myBeautifulFile.jpg|gif|png');
 ditherjs.dither(buffer,[,options]);
 ```
 
+### Similar Libraries
+
+ - [RgbQuant.js](https://github.com/leeoniya/RgbQuant.js)
+ - [dither-me-this](https://github.com/ShadowfaxRodeo/dither-me-this)
+ - [floyd-steinberg](https://github.com/noopkat/floyd-steinberg)
+
 ### Testimonials
 
 Useful as a comb to a bald man. -Anon
